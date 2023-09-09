@@ -1,0 +1,60 @@
+---
+title: "S2_Apalancamiento"
+author: "Sebastián Daniel Gómez Farje"
+date: "2023-04-07"
+output: html_document
+---
+
+¡Bienvenidos! El tema de esta semana se trata de los supuestos de una regresión lineal. Recordemos que una regresión lineal es un modelo estadístico que permite analizar la relación entre una variable dependiente y una o más variables independientes. Sin embargo, para obtener resultados confiables y precisos, es necesario cumplir con ciertos supuestos o condiciones. En este sesión veremos el supuesto de apalancamiento.
+
+# 1. Parte teórica
+
+El supuesto de apalancamiento se refiere a que haya una distribución normal de los residuos. Es decir, que no haya residuos que estén muy alejados del resto en el modelo. Si los hubiera, los residuos alejados del resto afectarían la predictibilidad del modelo.
+
+# 2. Aplicación práctica
+
+En este ejemplo, usaremos una base de datos de la NBA disponible en Kaggle. El objetivo final será predecir el número de puntos anotados por un jugador en función del número de asistencias que ha realizado y el número de rebotes obtenidos por partido.  
+
+## Cargamos las librerías
+
+```{r}
+#install.packages("readr") - Instalar la librería en la consola
+#install.packages("carData")
+library(readr) # Cargar la librería
+library(car) # para realizar la prueba VIF
+```
+
+## Cargamos la base de datos
+
+Esta base de datos contiene estadísticas de jugadores de la NBA durante la temporada 2014-2015, incluyendo información como puntos anotados, asistencias, rebotes, porcentaje de tiros de campo, entre otras. 
+
+```{r}
+players_stats <- read_csv("players_stats.csv")
+```
+
+## 2.1 Creamos el modelo
+
+En este ejemplo, utilizaremos las variables REB (rebotes anotados) y AST (asistencias por partido) como nuestras variables independientes.
+
+```{r}
+Modelo <- lm(PTS ~ AST + REB, data = players_stats)
+```
+
+## 2.2 Comprobamos el supuesto
+
+El supuesto del Apalancamiento se comprueba a través de gráficos. Entonces, graficamos el modelo creado con la función $check_model()$.
+
+```{r}
+library(performance)
+check_model(Modelo)
+```
+
+Esta función provee varios gráficos. El gráfico que usamos para comprobar el Apalancamiento es el que se llama "Influential Observations". Como menciona el gráfico, lo que revisaremos es si los puntos del gráfico, los residuos del modelo, están dentro de las líneas punteadas verdas. Como se observa en el gráfico, todos los puntos residuales, efectivamente, se encuentran dentro de los márgenes.
+
+## 2.3. Interpretación
+
+Se ha observado gráficamente que todos los residuos han quedado dentro de los márgenes, es decir, cercanos al 0. Esto quiere decir que los residuos del modelo se encuentran en una distribución normal, por lo que se cumple el spuesto del Apalancamiento.
+
+Enlace a la base de datos: 
+
+- https://www.kaggle.com/datasets/drgilermo/nba-players-stats-20142015

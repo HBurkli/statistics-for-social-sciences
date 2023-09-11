@@ -1,0 +1,85 @@
+---
+title: "Tipos de datos"
+author: "Reinhard Augustin"
+date: "2023-03-7"
+output: html_document
+---
+
+En R, además de los vectores, hay otras estructuras y tipos de datos que se pueden construir, unos más complejos que otros. Hay infinidad de datos que podemos utilizar para los programas y análisis, pero a continuación te mostramos los tipos de datos más comunes en R:
+
+#Números
+
+R admite distintos de números, tanto enteros como reales. El tipo de dato "integer" se utiliza para números enteros, mientras que el tipo "numeric" se utiliza para los reales.
+
+```{r}
+num.ent.<- 10L #Creamos un número entero
+num.real <- 15.807 #Creamos un número real
+```
+
+#Caracteres
+
+Los caracteres son cadenas de texto, en los que se utilizan comillas simples o dobles para indicar que un valor es una cadena de caracteres.
+
+```{r}
+cadena1 <- 'Estadística para Ciencias Sociales' #Cadena con comillas simples
+cadena2 <- "Estadística para Ciencias Sociales" #Cadena con comillas dobles
+```
+
+#Factores
+
+Los factores son varibles categóricas que adquieren un número limitado de valores. En R, los factores se crean utilizando la función "factor". Los factores son útiles porque permiten representar datos categóricos de forma eficiente, ordenarlos y manipularlos.
+
+```{r}
+vector1 <- c("Relaciones Internacionales", "Ciencia Política", "Economía", "Antropología", "Finanzas", "Sociología") #Creamos un vector de variables categóricas
+
+factor1 <- factor(vector1) #Convertimos el vector en un factor
+factor1
+```
+
+#Lógicos
+
+Los valores lógicos en R son "TRUE" o "FALSE" y se utiliza "NA" (Not Available) para representar valores faltantes.
+
+
+#Data frames
+
+Data frames: Un data frame es una estructura de datos tabular. En R, puedes crear un data frame utilizando la función "data.frame". Aon estructuras de datos de dos dimensiones (bidimensionales) en la que cada columna del data frame puede tener un tipo de dato diferente
+
+```{r}
+# Creamos un data frame con dos columnas: "nombres" y "edades"
+nombres <- c("Sebastián", "María", "Alejandro", "Alexandra")
+edades <- c(23, 28, 24, 25)
+
+data_f <- data.frame(nombres, edades) #Creamos el data frame
+data_f
+```
+
+En este ejemplo, creamos un data frame con dos columnas: "nombres" y "edades". Lo que resulta de este son dos columnas en las que encontramos los datos propuestos.
+
+#Arrays
+
+Los arrays son estructuras de datos de varias dimensiones (multidimensionales) que pueden contener elementos de un solo tipo de datos. Se crean utilizando la función "array()" y se puede acceder a sus elementos utilizando índices.
+
+```{r}
+# Creamos un array de dos dimensiones con tres filas y cuatro columnas
+array1 <- array(c(1:24), dim=c(3,4))
+
+#También podemos crear uno de más dimensiones
+array2 <- array(c(1:24), dim=c(3,2,2))
+
+#Visualizamos el contenido de nuestros arrays
+array1
+array2
+```
+
+Finalmente, cabe resaltar que R es un lenguaje orientado a objetos, que se utiliza para estructurar el código de tal forma que permite la creación y manipulación de objetos que contienen tanto datos como funciones, lo que facilita el desarrollo de aplicaciones más complejas y extensibles en R.
+
+Como hemos podido observar, cada objeto tiene un tipo y es miembro de una clase, las cuales hemos listado anteriormente: vectores numéricos, categóricos, factores, data frames, arrays, entre otros. Podemos usar la función "str()" o "class()" para conocer la el tipo de objeto que estamos tratando. 
+
+```{r}
+str(num.ent.)
+str(num.real)
+str(cadena2)
+str(factor1)
+str(data_f)
+```

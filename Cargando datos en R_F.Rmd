@@ -1,0 +1,117 @@
+---
+title: "Cargando datos a R"
+author: "Alexandra Brun Coronado"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: html_document
+---
+
+¡Hola!
+
+R es un lenguaje de programación orientado al análisis de datos. Una de las primeras acciones que tendremos que hacer para empezar un análisis en R es cargar los datos. 
+
+En la siguiente sección se especificarán los pasos para importar datos de diferentes formatos. 
+
+### 1) Establecer directorio de trabajo 
+
+Cuando quieras cargar datos de tu computadora, deberás establecer tu directorio de trabajo. El directorio, o también llamado carpeta de trabajo, es el lugar en tu computadora donde se encuentran todos los archivos con los que estarás trabajando en R. Ese será el lugar donde R va a buscar archivos para importarlos y, luego, exportarlos. 
+
+Para encontrar el actual directorio de trabajo solo tienes que escribir la función `getwd()` en la consola y ejecutarla.
+
+Luego de ejecutarla te mostrará la ruta del directorio que está utilizando R.
+
+Si lo que quieres es cambiar el directorio de trabajo debes usar la función `setwd()`, colocando como argumento la nueva ruta del directorio que quieras utilizar entre comillas. 
+
+También puedes establecer el directorio de trabajo desde el menú de R. Vas a **Session > Set Working Directory** y seleccionas la opción que prefieras.  
+
+Existen varias razones por las que podrías no ser capaz de cambiar tu directorio de trabajo. Algunas de las opciones que puedes realizar para evitar este error son: 
+- Comprobar que no hayas escrito mal la ruta. 
+- Asegurarte de que el directorio no contenga caracteres inválidos como acentos o corchetes. 
+- Comprobar de que tienes permisos de administrador. 
+
+### 2) Tipos de formato de datos
+
+Existe una variedad de formatos para los datos, pero nos centraremos en aquellos que puedan guardarse en hojas de cálculo. Esto se debe a que esta es la forma en la que habitualmente se trabaja con datos en las ciencias sociales.
+
+a. Datos en formato texto (o tabulares) 
+- CSV: .csv (su nombre completo es comma separated values o, en español, datos separados por comas) 
+- Otros datos en formato texto 
+
+b. Formatos de otros programas 
+- EXCEL: .xls y .xlsx 
+- SPSS: .sav y .por 
+- STATA: .dta 
+- SAS: .sas 
+
+c. Formatos propios de R 
+- R objects: .RData o .rda 
+- Serialized R objects: .rds 
+
+d. Otros formatos 
+- JSON 
+- XML 
+
+### 3) Importar datos desde R
+
+#### 3.1 Datos precargados en R
+
+R-base viene con muchos datos precargados, específicamente en el package datasets. Para poder ver los datos precargados y disponibles en R debes hacer lo siguiente:  
+
+```{r message=FALSE, warning=FALSE}
+# En este paso guardas el datasets de R en un objeto llamado “paquetes”. 
+
+paquetes <- library(help = "datasets")  
+
+# Con la siguiente función podrás ver solo una parte del datasets, específicamente las dos primeras columnas. 
+
+head(paquetes$info[[2]]) 
+```
+Si quieres utilizar, por ejemplo, el datasets BOD, debes ejecutar la siguiente línea: 
+
+```{r message=FALSE, warning=FALSE}
+BOD
+
+# En este paso estamos guardando los datos de BOD como un dataframe llamado "data_BOD".
+data_BOD <- as.data.frame(BOD)
+```
+
+#### 3.2 A través del menú
+
+RStudio permite cargar datos a través de menús **(File > Import Dataset)**. Por medio de este proceso podrás cargar datos en formato CSV, EXCEL, SPSS, SAS Y STATA.
+
+### 4) Importar datos desde Excel
+
+Para importar archivos en formato Excel hay varios paquetes, pero el que utiliza RStudio en sus menús es `readxl()`. Este paquete permite leer tanto ficheros .xls como .xlsx. Por ejemplo: 
+
+```{r message=FALSE, warning=FALSE}
+install.packages("readxl", repos = "http://cran.us.r-project.org") 
+
+
+library(readxl)
+
+#Guardamos el archivo de excel con el nombre "data_wvs" 
+data_wvs <- read_excel(path = "D:\\RStudio\\Bases de datos\\wvs_Brasil.xlsx")
+View(data_wvs)
+```
+
+### 5) Importar datos desde la Web: GitHub
+
+Para importar datos desde GitHub debes seguir dos simples pasos. En primer lugar, debes instalar la liberaría repmis. Y, por último, copiar el link del repositorio en donde se encuentre el archivo.
+
+```{r message=FALSE, warning=FALSE}
+install.packages("repmis")
+library(repmis)
+data_games <- source_data("https://raw.githubusercontent.com/HBurkli/statistics-for-social-sciences.github.io/main/Bases_de_datos/android-games.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

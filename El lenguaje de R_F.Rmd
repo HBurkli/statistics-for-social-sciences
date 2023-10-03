@@ -1,0 +1,133 @@
+---
+title: "El lenguaje de R"
+author: "Sebastian Torres Tapia"
+date: "2023-02-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+¡Hola!
+
+### 1) Expresiones
+
+El lenguaje de código de R está compuesto por una serie de expresiones. Dentro de estas expresiones podemos encontrar expresiones aritméticas, condicionales y asignaciones.
+
+```{r}
+x <- 1
+if (1 > 2) "si" else "no"
+```
+
+```{r}
+127 %% 10
+```
+
+Las expresiones están compuestas por objetos y funciones. Dichas expresiones podrán ser separadas por un punto y coma o ser escritas en diferentes líneas. 
+
+### 2) Objetos
+
+Todo tipo de código hace uso de objetos, los cuales incluyen vectores numéricos, vectores de caracteres, listas y funciones.
+
+```{r}
+# un vector numérico (con cinco elementos)
+c(1,2,3,4,5)
+```
+
+```{r}
+# a vector de caracteres (con sólo un elemento)
+"This is an object too"
+```
+
+```{r}
+# una lista
+list(c(1,2,3,4,5),"This is an object too", " this is a list")
+```
+
+```{r}
+# una función
+function(x,y) {x + y}
+function(x,y) {x + y}
+```
+
+
+### 3) Simbolos
+
+Se refiere al nombre de la variable al que se le está asignando un objeto en el entorno. 
+
+```{r}
+x <- 1 #asignamos el símbolo "x" al objeto "1" en el entorno.
+```
+
+### 4) Funciones
+
+Una función hace referencia a un objeto que toma algunos objetos como “input” (es decir, los argumentos de la función) para retornar un objeto como “output”.
+
+- En declaraciones de asignación, la mayoría de los objetos son inmutables. Por tanto, R copiará el objeto y no únicamente la referencia al objeto. Así, todo en R es un objeto: funciones, símbolos e incluso expresiones.
+
+
+### 5) Valores especiales
+
+#### 5.1 Na
+
+Esto se utiliza para representar valores faltantes (NA significa "not available".) y pueden encontrarse en texto cargado en R (para representar valores faltantes) o en data cargada desde bases de datos importadas (para reemplazar los valores “NULL”)
+
+
+```{r}
+v <- c(1,2,3)
+v
+```
+
+```{r}
+length(v) <- 4
+v
+```
+
+
+#### 5.2 Inf y -Inf
+
+En los casos en que el resultado es computacionalmente muy grande, R retornará el valor Inf en caso dicho resultado sea positivo o cero y -Inf en caso sea negativo. 
+
+```{r}
+2 ^ 1024
+```
+
+```{r}
+- 2 ^ 1024
+```
+
+
+#### 5.3 NaN
+
+Este valor aparecerá cada vez que el resultado pedido y producido sea poco coherente.
+
+```{r}
+0 / 0
+```
+ 
+#### 5.4 NULL
+
+Este valor es usualmente empleado como un argumento en funciones para indicar que no se le asignó valor alguno al argumento.
+
+
+#### 5.5 Coerción
+
+Cuando llama a una función con un argumento del tipo incorrecto, R intentará forzar los valores a un tipo diferente para que la función funcione. Hay dos tipos de coerción que ocurren automáticamente en R: coerción de objeto formal y coerción de tipo incorporado. 
+
+- Con funciones genéricas, R buscará un método adecuado. Si no hay una coincidencia exacta, R buscará un método de coerción que convierta el objeto en un tipo para el que existe un método adecuado.
+- Asimismo, R convertirá automáticamente entre tipos de objetos integrados cuando corresponda. R convertirá de tipos más específicos a tipos más generales.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

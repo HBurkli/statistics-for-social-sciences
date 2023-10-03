@@ -1,0 +1,76 @@
+---
+title: "Operaciones Básicas de R"
+author: "Sebastián Daniel Gómez Farje"
+date: "2023-02-16"
+output: html_document
+---
+
+¡Hola!
+
+R permite realizar diversas operaciones mediante el uso de expresiones. Para utilizar estas expresiones, puedes ingresarlas en la consola o, alternativamente, dentro de un chunk de código
+
+Puedes crear un chunk de código seleccionando el ícono "+C" que aparece en la parte superior o presionando Ctrl + Alt + I en el teclado.
+
+
+### 1) Operaciones Básicas
+
+Por ejemplo, se pueden realizar operaciones matemáticas:
+
+```{r}
+1+2
+```
+
+También, puedes ingresar más de una expresión en el mismo chunk:
+
+```{r}
+3-1
+
+1*4
+
+5/1
+```
+
+
+### 2) Vectores
+
+En R, cada número o grupo de números que ingreses será considerado como un vector. Puedes construir vectores más largos utilizando la función c(...). También, se pueden construir vectores de caractér colocando "". Estos también pueden tener más de un elemento con la función c(...).
+
+```{r}
+999                  # Vector de un elemento
+c(0,2,4,6,8)         # Vector de varios elementos
+"Hola"               # Vector de caractér de un elemento
+c("Hola","Chau")     # Vector de caractér de varios elementos
+```
+
+
+### 3) Operaciones entre Vectores
+
+Si realizas una operación entre dos vectores, R emparejará los elementos de cada vector y generará un nuevo vector resultado.
+
+```{r}
+c(1,2,3,4) + c(4,3,2,1)
+c(1,2,3,4) * c(5,5,5,5)
+c(2,4,6,8) - c(0,2,4,6)
+```
+
+Si los vectores no tienen la misma catidad de elementos, R repetirá la secuencia del vector más pequeño. Sin embargo, si la cantidad de elementos del vector más grande no es divisible entre la cantidad del vector más pequeño, no se ejecutará la operación.
+
+```{r}
+c(1,10,100,1000) - 1
+10 / c(10,5,2,1)
+c(5,10,15,20) * c(2,3)
+
+c(1,2,3,4) + c(3,2,1) # Vectores incompatibles porque uno tiene 4 elementos y el otro 3.
+```
+
+### 4) "[1]"
+
+Nótese el "[1]" al comienzo de cada fila. El "[1]" representa el número de orden del objeto (dentro del vector) que está al inicio de la fila.
+
+```{r}
+1:60
+```
+```{r}
+c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+```
+En cada uno de los ejemplos, el número "[]" representa el número de órden correspondiente con el primer objeto de cada fila, sin importar qué valor tenga cada objeto.

@@ -1,0 +1,164 @@
+---
+title: "Tipos y estructuras de datos"
+author: "Alexandra Brun Coronado"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: html_document
+---
+
+¡Hola!
+
+RStudio tiene la capacidad de manejar diversos tipos de datos. Al referirse a tipos de datos en R, se habla de los objetos más básicos que se pueden manipular también conocidos como datos atómicos. A continuación, se detallará los distintos tipos de datos, así como algunas de las estructuras en las que se pueden almacenar.
+
+### 1) Tipos de datos
+
+#### 1.1 Numéricos
+
+##### 1.1.1 Numeric o double
+
+En R *double* es la representación de un número real, es decir, número con decimales. 
+
+```{r}
+numero_double <- 16.12
+numero_double
+```
+
+Se puede consultar la clase del objeto a través de la función `class()`.
+
+```{r}
+class(numero_double)
+```
+
+Sin embargo, también se puede saber el tipo de dato por medio de la función `typeof()`:
+
+```{r}
+typeof(numero_double)
+```
+
+##### 1.1.2 Integer
+
+Integer es la tipificación para los números enteros en R.
+
+```{r}
+numero_entero <- 9
+class(numero_entero)
+typeof(numero_entero)
+```
+
+Todos los números en R (enteros o decimales) se tipifican como numeric; no obstante, se puede forzar a R para que lo entienda específicamente como entero agregando una *L*. Por ejemplo:
+
+```{r}
+int <- 5L
+typeof(int)
+```
+
+#### 1.2 Character
+
+Los caracteres o las cadenas de caracteres representan símbolos, letras, palabras o frases. En R todo texto debe estar siempre escrito entre comillas.
+
+```{r}
+character <- "paz" #El uso de comillas simples o dobles es equivalente.
+class(character)
+```
+
+#### 1.3 Complex
+
+El tipo de dato complejo es un objeto que incluye un número imaginario.
+
+```{r}
+complex <- 2 + 8i
+typeof(complex)
+```
+
+#### 1.4 Logical
+
+Este tipo de dato está compuesto por los valores *TRUE* (verdadero) y *FALSE* (falso). Suele ser el resultado de operaciones lógicas.
+
+```{r}
+logicoT <- TRUE
+logicoF <- FALSE
+typeof(logicoT)
+typeof(logicoF)
+```
+
+Otra forma de verlo es la siguiente:
+
+```{r}
+a <- 7
+b <- 10
+a<b
+```
+
+#### 1.5 Factor
+Estrictamente, no es un tipo de dato. Un factor es una variable categórica con un número determinado de valores o niveles. En R se utilizan para clasificar los datos por medio de grupos o categorías determinados por los niveles del factor. 
+
+Se pueden crear con la función `factor()`.
+
+```{r}
+vector_paisesAP <- factor (c("p", "m", "ch", "c", "p", "m", "m", "c", "c"))
+class(vector_paisesAP)
+```
+
+Sin embargo, se puede utilizar una sintaxis más específica para determinar los niveles del factor (levels) y asignar etiquetas (labels) respectivamente.
+
+```{r}
+vector_paisesAP <- factor(vector_paisesAP, levels=c("p","m","ch","c"), labels=c("Peru","Mexico","Chile","Colombia"))
+vector_paisesAP
+```
+
+### 2) Estructuras de datos
+
+#### 2.1 Secuencias numéricas
+
+```{r}
+1:15
+15:1
+seq(1,20) #Puede leerse como secuencia del 1 al 20.
+seq(0, 10, by = 0.5) #Puede leerse como una secuencia del 0 al 10, pero con una diferencia de 0.5 entre cada elemento.
+```
+
+#### 2.2 Listas
+
+Una lista es una colección de elementos que pueden ser de distinto tipo.
+
+```{r}
+x <- c(1, 2, 3, 4, 5)
+y <- c("America", "Europa", "Asia", "Africa", "Antartida")
+lista <- list(x, y)
+lista
+```
+
+#### 2.3 Matrices y Data Frames
+
+Ambos representan datos "rectangulares", lo cual quiere decir que se usan para almacenar datos tabulares, con filas y columnas. Se diferencian en que las matrices solo pueden contener una sola clase de datos, mientras que los data frames pueden contener diversas clases de datos.
+
+##### 2.3.1 Matrices
+
+Una matriz es una estructura bidimensional donde las filas son horizontales y las columnas verticales. Por ejemplo, una matriz de 5 por 6 (5x6) tiene 5 filas y 6 columnas.  Para crear una matriz se puede utilizar la función `matrix()`.
+
+```{r}
+matriz <- matrix(1:15, 5, 3) #El primer argumento hace referencia a los datos , el segundo argumento hace referencia al número de  filas (5) y el último al número de columnas (3)
+class(matriz)
+matriz
+```
+
+##### 2.3.2 Data Frames
+
+Un data frame también es una estructura de datos bidimensional, pero es una lista de vectores de la misma longitud. Para crear una matriz se puede utilizar la función `data.frame()`.
+
+```{r}
+consejo_seguridad <- c("EEUU", "China", "Rusia", "Francia", "ReinoUnido") #Se crea un vector para realizar el ejemplo
+
+mi_dataframe <- data.frame(consejo_seguridad, matriz)
+class(mi_dataframe)
+mi_dataframe
+```
+
+
+
+
+
+
+
+
+
+

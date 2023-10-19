@@ -1,0 +1,157 @@
+---
+title: "Limpieza de datos"
+author: "Alexandra Brun Coronado"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: rmdformats::readthedown
+---
+¡Hola!
+
+En la siguiente sección se explicarán algunas funciones para limpiar datos y estructurar información en R. 
+
+### 1) Explorar los datos 
+
+Para esta sección se utilizará la base de datos de Daphna Canetti, Ibrahim Khatib, Aviad Rubin y Carly Wayne que utilizaron en su trabajo sobre el impacto del framing de los conflictos en las actitudes políticas.
+
+```{r message=FALSE, warning=FALSE}
+library(readxl)
+data <- read_excel("The impact of conflict frames on political attitudes.xlsx")
+View(data)
+```
+
+Puedes encontrar el dataset en el repositorio de GitHub [aqui](https://github.com/HBurkli/statistics-for-social-sciences.github.io/tree/main/Bases_de_datos).
+
+Lo primero que deberás realizar luego de cargar una base de datos es explorarla, para esto hay diferentes funciones: 
+
+#### a. dim() 
+
+La función `dim()` nos permite ver la dimensión de la base de datos.
+
+```{r message=FALSE, warning=FALSE}
+dim(data) #El primer número hacer referencia a las filas y el segundo número a las columnas.
+```
+
+#### b. head() 
+
+La función `head()` te permitirá ver las primeras filas de la base de datos. 
+
+```{r message=FALSE, warning=FALSE}
+head(data)
+# También podrás seleccionar la cantidad de filas que quieras ver. Por ejemplo, mostrar las primeras 10 filas. 
+head(data, n=10) 
+```
+
+#### c. summary() 
+
+Al aplicar la función `summary ()` obtendrás un resumen general sobre las variables de tu dataset. Te mostrará: el valor mínimo, el valor máximo, la media, la mediana. primer y tercer cuartil. 
+
+```{r message=FALSE, warning=FALSE}
+summary(data)
+```
+
+#### d. str() 
+
+Con la función str() podrás visualizar la estructura interna de la base de datos. Te dará información sobre: el nombre de las columnas, el número de observaciones, el tipo de dato y las primeras observaciones por cada columna.  
+
+```{r message=FALSE, warning=FALSE}
+str(data)
+```
+
+### 2) Valores perdidos (NA) 
+
+Lo primero que debes hacer es comprobar si en tu base de datos hay valores perdidos. Al anidar la función `is.na()` con la función `sum()` podrás saber la cantidad de NA en tu dataset. Por ejemplo: 
+
+```{r message=FALSE, warning=FALSE}
+sum(is.na(data)) 
+```
+
+Luego, tienes las siguientes dos opciones: 
+
+#### a. Eliminar todos los NA en un dataset 
+
+La función `na.omit()` te permitirá eliminar todas las filas con valores NA en cualquier columna de tu dataset.Para ello puedes ejecutar el siguiente comando: 
+
+```{r message=FALSE, warning=FALSE}
+data_omit <- na.omit(data)
+```
+
+#### b. Eliminar los NA de una columna 
+
+En la práctica, usualmente vas a necesitra eliminar los valores perdidos de algunas columnas y no de todo el dataset. La función `complete.cases()` te permitirá realizar esta tarea. Por ejemplo: 
+
+```{r message=FALSE, warning=FALSE}
+data_cases <- data[complete.cases(data$Female), ] 
+# En este ejemplo se están eliminando los NA de la columna Female. 
+```
+
+### 3) Coerción 
+
+En R los datos pueden ser transformados (coercionados) de un tipo a otro. Las coerciones se realizan en un orden en particular, de los datos más restrictivos a los más flexibles y no pueden ocurrir en orden inverso. 
+
+<center>
+### **Logical ➝ Integer ➝  Numeric ➝  Character**
+</center>
+
+Para realizar una coerción en específico podrás utilizar la familia de funciones as(): 
+
+- as. integer() --> Devuelve datos enteros 
+- as. numeric() --> Devuleve datos numéricos 
+- as.character --> Devuelve una cadena de texto 
+- as.factor() --> Devuelve un factor 
+- as.logic() --> Devuelve un dato de tipo lógico 
+- as.null() --> Devuelve NULL 
+
+(*) Ten en cuenta que los datos numéricos y cadena de texto pueden ser transformados a factor. 
+
+```{r}
+data_omit$Age <- as.numeric(data_omit$Age)
+```
+
+### 4) Seleccionar variables con R base
+
+Antes de abordar datos, es fundamental difinir el tipo de análisis que se desea realizar. Para ello, la adecuada selección de variables facilitará la posterior manipulación de los datos.
+
+Para seleccionar las variables se utilizarán los corchetes "[ ]". Como se quiere seleccionar variables, se debe especificar a R que se trabajará con columnas, para ello se debe incorporar una coma luego del primer corchete. Por ejemplo:
+
+```{r}
+data[, 1] #En este caso, se está seleccionando la primera columna (variable) de la base de datos data_omit.
+
+data[, c(1,2,3)] #En este ejemplo, se están seleccionando las variables número uno, dos y tres
+```
+
+También es posible seleccionar un intervalo de columnas.
+
+```{r}
+data[, 1:5] #Acá se está seleccionando de la primera a la quinta variable.
+```
+
+### 5) Filtrar observaciones con R base
+
+Para este caso, como se quiere filtrar las observaciones, la coma se debe colocar antes del segundo corchete. Por ejemplo:
+
+```{r}
+data[data$married == 1, ] #Se están filtrando las observaciones de las personas que sí están casadas.
+```
+
+Es posible incorporar más de un filtro a la vez.
+
+```{r}
+data[data$Gender == 1 & data$Rel_deg == 4, ] #Para este ejemplo se están filtrando los casos de hombres con un indicador de religiosidad muy alto.
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

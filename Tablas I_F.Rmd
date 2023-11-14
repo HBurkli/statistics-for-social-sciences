@@ -1,0 +1,85 @@
+---
+title: "Tablas I"
+author: "Sebastián Daniel Gómez Farje"
+date: "2023-03-05"
+output: html_document
+---
+
+¡Hola!
+
+Una de las herramientas más útiles para la visualización de data son las tables. En esta primera parte sobre el tema de tablas en R, exploraremos las funciones básicas de `table()` y `prop.table()`. Primero, debemos cargar la data. Esta base de datos muestra los tiempos de víaje que realiza un conductor desde su casa a su lugar de trabajo. En total, incluye 14 variables. 
+
+```{r}
+Viajes <- read.csv("https://raw.githubusercontent.com/HBurkli/statistics-for-social-sciences.github.io/main/Bases_de_datos/travel_times.csv")
+```
+
+
+#### 1) table()
+
+Una vez descargada la base de datos, se puede acceder a toda la data seleccionando el objeto que acabamos de crear (Viajes) en la parte superior derecha de R. No obstante, la función `table()` permite examinar variables específicas.
+
+Lo primero que se debe de hacer es escribir la función y abrir el paréntesis. Luego, se seleccionan dos variables de la base de datos. Estas variables serán las filas y columnas de la tabla. Para seleccionar la variable dentro de `table()`, se sigue el siguiente formato: Data$Variable. 
+
+```{r}
+# En este ejemplo, la Data es "Viajes" y las variables son "GoingTo" y "DayOfWeek"
+
+table(Viajes$GoingTo, Viajes$DayOfWeek)
+```
+
+En esta nueva tabla, los valores de la primera variable (GoingTo) se convierten en las filas (GSK, Home). Los valores de la segunda variable (DayOfWeek) se convierten en las columnas (Friday, Monday, Thursday, Tuesday, Wednesday).
+
+También podemos guardar esta nueva tabla como objeto:
+
+```{r}
+Tabla1 <- table(Viajes$GoingTo, Viajes$DayOfWeek)
+```
+
+
+#### 2) prop.table()
+
+La función `prop.table()` se diferencia en que, en lugar de mostrar cantidades, muestra las proporciones de cada variable en relación con la totalidad de los casos. Para utilizar la función, tan solo ponemos dentro del parénteses el objeto "Tabla1", que contiene la tabla que hicimos con `table()`. Hacer esto nos mostrará las proporciones en general, es decir, las proporciones no estarán distribuidas por fila o columna. Para mostrar las proporciones según fila, se agrega un ", 1" después del objeto. Para mostrar las proporciones según columna, se agrega un ", 2".
+
+```{r}
+prop.table(Tabla1) # Proporciones generales
+prop.table(Tabla1, 1) # Proporciones por fila
+prop.table(Tabla1, 2) # Proporciones por columna
+```
+
+Las tablas resultantes nos muestran las proporciones en general, por fila y por columna respectivamente. No obstante, automáticamente aparecen varios decimales. Esto se puede arreglar utilizando la función `round()`, que permite seleccionar el número de decimales que queremos mostrar.
+
+```{r}
+round(prop.table(Tabla1), 2) # Proporciones generales
+round(prop.table(Tabla1, 1), 2) # Proporciones por fila
+round(prop.table(Tabla1, 2), 2) # Proporciones por columna
+
+# En este caso, terminamos todas las funciones con ", 2" para tener dos decimales, pero esto puede ser cambiado a gusto
+```
+
+Ahora que ya hemos redondeado las proporciones a 2 decimales, podemos convertirlas a porcentajes al simplemente multiplicar por 100.
+
+```{r}
+100 * round(prop.table(Tabla1), 2) # Proporciones generales
+100 * round(prop.table(Tabla1, 1), 2) # Proporciones por fila
+100 * round(prop.table(Tabla1, 2), 2) # Proporciones por columna
+```
+
+A partir de estas tablas de proporciones podemos obtener mucha información. Por ejemplo, 10% de los conductores manejó hacia su casa un lunes. Al mismo tiempo, de los conductores que manejaron a su casa, un 20% lo hizo un lunes. Por otro lado, de los conductores que manejaron un lunes, el 51% lo hizo hacia su casa.
+
+Finalmente, también podemos guardar estas nuevas tablas como objeto:
+
+```{r}
+TablaProp <- 100 * round(prop.table(Tabla1), 2) # Proporciones generales
+TablaPropFila <- 100 * round(prop.table(Tabla1, 1), 2) # Proporciones por fila
+TablaPropColumna <- 100 * round(prop.table(Tabla1, 2), 2) # Proporciones por columna
+```
+
+De este modo, en lugar de escribir todo el código de nuevo, simplemente escribimos el nombre del objeto para visualizar las tablas nuevamente:
+
+```{r}
+TablaProp
+
+TablaPropFila
+
+TablaPropColumna
+```
+

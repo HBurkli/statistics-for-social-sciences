@@ -1,0 +1,87 @@
+---
+title: "Tablas III"
+author: "Sebastian Torres Tapia"
+date: "2023-02-24"
+output: html_document
+---
+!Hola! 
+
+En esta sesión veremos la parte final sobre el tema de tablas en R. Particularmente, veremos las comandos `Select()` y `Filter()`. Para ambos casos, podemos usar la librería **dplyr**. 
+
+### 1) Cargamos las librerías y data
+
+```{r message=FALSE, warning=FALSE}
+# Cargamos librerías
+install.packages("dplyr")
+library(dplyr)
+```
+
+Ahora cargamos la data. Para fines de este tutorial, usaremos una base de datos de tiempos de víaje que realiza un conductor desde su casa a su lugar de trabajo. En total, incluye 14 variables. 
+
+```{r}
+PATH <- "https://raw.githubusercontent.com/HBurkli/statistics-for-social-sciences.github.io/main/Bases_de_datos/travel_times.csv"
+df <- read.csv(PATH)
+
+```
+
+### 2) Select
+
+En muchos casos, antes de proceder con el análisis directo de la data, nos puede ser muy util organizar la información que requeriremos. En este sentido, no siempre necesitaremos todas las variables. Es una buena práctica seleccionar solo las variables de nuestro interés antes de proceder con dicho análisis. 
+
+Como sucede con muchos otros códigos, podemos seleccionar variables de diversas maneras. Aquí veremos tres principales:
+
+- `select(df, A, B ,C)`: Aqui seleccionamos las variables A, B y C de la data (df). 
+- `select(df, A:C)`: Aqui seleccionamos todas las variables desde la A hasta la C de la data (df).
+- `select(df, -C)`: Aqui seleccionamos todas las variables menos la C de la data (df).
+
+Aqui explicaremos un ejemplo donde seleccionaremos todas las variables menos la de comentarios ("comments") dado que no aporta para nada al análisis. 
+
+```{r}
+Ex1 <- select(df, -Comments)
+```
+
+
+### 3) Filter
+
+Este comando nos permite mantenerlas observaciones siguiendo un criterio determinado. El filtro funciona de manera similar al select: primero pasa el marco de datos y luego una condición (separada por una coma). 
+
+El formato sería así: 
+
+filter(df, condition)
+
+Donde:
+- df: el dataset que usaremos para filtrar la data.
+- condition:  la condición que usaremos para el filtro. 
+
+Una vez comprendemos el código, debemos tener en cuenta que existen dos tipos de criterios: único y múltiple. 
+
+#### 3.1 Criterio único
+
+Primero, podemos contar el número de observaciones dentro de cada nivel de una variable de factor. El código sería así: 
+
+```{r}
+table(Ex1$GoingTo)
+```
+
+Código Explicación
+
+- table(): cuenta el número de observaciones por nivel. Nota: solo se aceptan variables de nivel de factor.
+- table(Ex1$GoingTo): cuenta el número de viajes hacia el destino final.
+
+#### 3.2 Criterios multiples
+
+Podemos filtrar un conjunto de datos con más de un criterio. Por ejemplo, puede extraer las observaciones donde el destino es "Casa" y ocurrió un "miércoles". Aquí lo aplicamos como ejemplo: 
+
+```{r}
+select_home_wed <- filter(df, GoingTo == "Home" & DayOfWeek == "Wednesday")
+dim(select_home_wed)
+```
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,129 @@
+---
+title: "Recodificación de datos"
+author: "Alexandra Brun Coronado"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: html_document
+---
+
+¡Hola!
+
+En esta sección aprenderás a recodificar los datos. Lo primero que haremos será importar la Encuesta Mundial de Valores (WVS) 2018 de Brasil.
+
+```{r message=FALSE, warning=FALSE}
+install.packages("readxl")
+library (readxl)
+data <- read_excel("wvs_brasil2.xlsx")
+```
+
+Puedes encontrar el dataset en el repositorio de GitHub [aqui](https://github.com/HBurkli/statistics-for-social-sciences.github.io/blob/main/Bases_de_datos/wvs_brasil2.xlsx).
+
+### 1) Etiquetar variables
+
+Para poder recodificar una variable lo primero que deberás hacer es convertir la variable original a un factor y luego etiquetarla. Para generar las etiquetas puedes utilizar la función `factor()` con la siguiente sintaxis: 
+
+factor(variable, levels, labels) 
+- variable: la variable a etiquetar, esta debe ser un vector y no ser decimal. 
+- levels: este argumento es opcional y hace referencia a los valores que tiene el vector. 
+- labels: se refiere a las etiquetas que van a tomar los valores del vector. 
+
+Por ejemplo, con esta función podrás cambiar las categorías de la variable H_SETTLEMENT.
+
+```{r}
+table(data$`H_SETTLEMENT: Settlement type`)
+```
+
+```{r}
+data$`H_SETTLEMENT: Settlement type` <- factor(data$`H_SETTLEMENT: Settlement type`, levels = c(1:5), labels = c("Capital", "Centro_regional","Centro_local","Otra_ciudad","Villa"))
+table(data$`H_SETTLEMENT: Settlement type`)
+```
+
+### 2) Recodificar variables 
+
+#### a. Usando corchetes 
+
+Los corchetes nos permiten seleccionar grupos de observaciones o grupos de variables para realizar determinados procedimientos. A continuación, recodificaremos la variable "G_Townsize" para que en lugar de 8 categorías haya 5.
+
+```{r}
+table(data$`G_TOWNSIZE: Settlement size_8 groups`)
+```
+
+```{r message=FALSE, warning=FALSE}
+data$G_T2[data$`G_TOWNSIZE: Settlement size_8 groups` <= 1] <- 1
+data$G_T2[data$`G_TOWNSIZE: Settlement size_8 groups` >=2 & data$`G_TOWNSIZE: Settlement size_8 groups` <=3] <- 2
+data$G_T2[data$`G_TOWNSIZE: Settlement size_8 groups` >=4 & data$`G_TOWNSIZE: Settlement size_8 groups` <=5] <- 3
+data$G_T2[data$`G_TOWNSIZE: Settlement size_8 groups` >=6 & data$`G_TOWNSIZE: Settlement size_8 groups` <=7] <- 4
+data$G_T2[data$`G_TOWNSIZE: Settlement size_8 groups` == 8] <- 5
+
+table(data$G_T2)
+```
+
+#### b. Usando replace ()
+
+Esta función te permitirá reemplazar el valor específico de un vector por uno nuevo. Su sintaxis es: 
+
+replace(vector, list, valores) 
+- vector: se refiere al nombre del vector 
+- list: es la posición del elemento o elementos que vas a querer reemplazar. 
+- valores: se refiere al nuevo valor 
+
+```{r}
+data$`S_INTLANGUAGE: Language in which interview was conducted` <- replace(data$`S_INTLANGUAGE: Language in which interview was conducted`, list=c(2,4,6), values=c("Portugues", "Portugues","Portugues")) 
+```
+
+En este ejemplo reemplazamos los valores en las posiciones 2, 4 y 6 por la palabra "Portugues".
+
+#### c. Usando recode()
+
+Esta función te permitirá recodificar valores numéricos según su posición y valores categóricos según su nombre.  
+
+Lo primero que deberás hacer es instalar el paquete `dplyr()` y utilizar la librería **car()**. 
+
+```{r message=FALSE, warning=FALSE}
+install.packages("dplyr") 
+library(car) 
+```
+
+En el siguiente ejemplo lo que haremos será recodificar las observaciones con valores -2 y -1 de la variable "Q4:Important in life:Politics" para tener solo 4 categorías.
+
+```{r}
+table(data$`Q4: Important in life: Politics`)
+```
+
+```{r}
+library(car)
+data$`Q4: Important in life: Politics` <- recode(data$`Q4: Important in life: Politics`, "-2=1; -1=1") 
+table(data$`Q4: Important in life: Politics`) 
+```
+
+#### c. Usando ifelse()
+
+Esta función te permitirá utilizar en una sola línea de código las funciones `if()` y `else()`: 
+- if: se utiliza cuando deseas que se ejecute una operación siempre y cuando cumpla con una condición. 
+- else: se utiliza para indicarle al programa qué hacer cuando la condición de if() no se cumple.  
+
+Es una forma de decirle a R: "Si esta condición es cierta, entonces haz esta operación". Esta función es particularmente útil para recodificar factores lógicos.
+
+```{r}
+table(data$Q260)
+```
+
+
+```{r}
+data$Q260 <- ifelse(data$Q260 == 1, "Masculino", "Femenino") 
+table(data$Q260)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

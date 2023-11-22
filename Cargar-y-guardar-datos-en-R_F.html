@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Alexandra Brun Coronado y Sebastián Daniel Gómez Farje" />
+
+
+<title>Guardar y cargar datos a R</title>
+
+<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Prueba1</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="El-lenguaje-de-R_F.html">Lenguaje de R</a>
+</li>
+<li>
+  <a href="Limpieza de datos_F.html">Limpieza de datos</a>
+</li>
+<li>
+  <a href="Operaciones-Básicas-de-R_F.html4">Operaciones básicas de R</a>
+</li>
+<li>
+  <a href="Tipo-y-estructuras-de-datos_F.html">Tipos y estructuras de datos</a>
+</li>
+<li>
+  <a href="Tablas-I_F.html">Tablas I</a>
+</li>
+<li>
+  <a href="Tablas-III_F.html">Tablas III</a>
+</li>
+<li>
+  <a href="Cargar-y-guardar-datos-en-R_F.html">Cargar y guardar datos en R</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Guardar y cargar datos a R</h1>
+<h4 class="author">Alexandra Brun Coronado y Sebastián Daniel Gómez
+Farje</h4>
+<h4 class="date">22 Noviembre 2023</h4>
+
+</div>
+
+
+<p>¡Hola!</p>
+<p>R es un lenguaje de programación orientado al análisis de datos. Una
+de las primeras acciones que tendremos que hacer para empezar un
+análisis en R es cargar los datos.</p>
+<p>En la siguiente sección se especificarán los pasos para importar
+datos de diferentes formatos.</p>
+<div id="establecer-directorio-de-trabajo" class="section level3">
+<h3>1) Establecer directorio de trabajo</h3>
+<p>Cuando quieras cargar datos de tu computadora, deberás establecer tu
+directorio de trabajo. El directorio, o también llamado carpeta de
+trabajo, es el lugar en tu computadora donde se encuentran todos los
+archivos con los que estarás trabajando en R. Ese será el lugar donde R
+va a buscar archivos para importarlos y, luego, exportarlos.</p>
+<p>Para encontrar el actual directorio de trabajo solo tienes que
+escribir la función <code>getwd()</code> en la consola y ejecutarla.</p>
+<p>Luego de ejecutarla te mostrará la ruta del directorio que está
+utilizando R.</p>
+<p>Si lo que quieres es cambiar el directorio de trabajo debes usar la
+función <code>setwd()</code>, colocando como argumento la nueva ruta del
+directorio que quieras utilizar entre comillas.</p>
+<p>También puedes establecer el directorio de trabajo desde el menú de
+R. Tienes que ir a <strong>Session &gt; Set Working Directory</strong> y
+seleccionas la opción que prefieras.</p>
+<p>Existen varias razones por las que podrías no ser capaz de cambiar tu
+directorio de trabajo. Algunas de las opciones que puedes realizar para
+evitar este error son: - Comprobar que no hayas escrito mal la ruta. -
+Asegurarte de que el directorio no contenga caracteres inválidos como
+acentos o corchetes. - Comprobar de que tienes permisos de
+administrador.</p>
+</div>
+<div id="tipos-de-formato-de-datos" class="section level3">
+<h3>2) Tipos de formato de datos</h3>
+<p>Existe una variedad de formatos para los datos, pero nos centraremos
+en aquellos que puedan guardarse en hojas de cálculo. Esto se debe a que
+esta es la forma en la que habitualmente se trabaja con datos en las
+ciencias sociales.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Datos en formato texto (o tabulares)</li>
+</ol>
+<ul>
+<li>CSV: .csv (su nombre completo es comma separated values o, en
+español, datos separados por comas)</li>
+<li>Otros datos en formato texto</li>
+</ul>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Formatos de otros programas</li>
+</ol>
+<ul>
+<li>EXCEL: .xls y .xlsx</li>
+<li>SPSS: .sav y .por</li>
+<li>STATA: .dta</li>
+<li>SAS: .sas</li>
+</ul>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Formatos propios de R</li>
+</ol>
+<ul>
+<li>R objects: .RData o .rda</li>
+<li>Serialized R objects: .rds</li>
+</ul>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Otros formatos</li>
+</ol>
+<ul>
+<li>JSON</li>
+<li>XML</li>
+</ul>
+</div>
+<div id="objetos-de-data-de-r" class="section level3">
+<h3>3) Objetos de data de R</h3>
+<p>R te permite guardar y cargar objetos de data. De este modo, puedes
+emplear bases de datos externas y aplicarles todo lo que R tiene para
+ofrecer.</p>
+<p>Primero creemos un objeto en R. Para ello, crearemos diferentes
+vectores que, unidos, forman una data.</p>
+<pre class="r"><code># Vectores
+Número &lt;- c(1,2,3,4,5) 
+Letra &lt;- c(&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,&quot;E&quot;)
+Ciudad &lt;- c(&quot;Amsterdam&quot;, &quot;Bilbao&quot;, &quot;Casablanca&quot;, &quot;Dakar&quot;, &quot;Ebolowa&quot;)
+
+# Data
+Data1 &lt;- data.frame(Número, Letra, Ciudad)
+Data1</code></pre>
+<pre><code>##   Número Letra     Ciudad
+## 1      1     A  Amsterdam
+## 2      2     B     Bilbao
+## 3      3     C Casablanca
+## 4      4     D      Dakar
+## 5      5     E    Ebolowa</code></pre>
+<p>Recuerda que es importante seleccionar el directorio de trabajo para
+el guardado y cargado de objetos de data.</p>
+<p>Ahora que has creado el objeto de data, la forma más fácil de
+guardarlo es con la función <code>save()</code>. El código para hacer es
+el siguiente:</p>
+<center>
+<strong>save(nombre del objeto, file = “dirección del directorio/nombre
+para el archivo.RData”)</strong>
+</center>
+<p>Nótese el uso de las “/” y no la “", que suelen confundirse. Una vez
+que el objeto de data es guardado en la dirección indicada, lo puedes
+cargar cuando quieras con la función <code>load()</code>.</p>
+</div>
+<div id="importar-datos-desde-r" class="section level3">
+<h3>4) Importar datos desde R</h3>
+<div id="datos-precargados-en-r" class="section level4">
+<h4>4.1 Datos precargados en R</h4>
+<p>R-base viene con muchos datos precargados, específicamente en el
+package datasets. Para poder ver los datos precargados y disponibles en
+R debes hacer lo siguiente:</p>
+<pre class="r"><code># En este paso guardas el datasets de R en un objeto llamado “paquetes”. 
+
+paquetes &lt;- library(help = &quot;datasets&quot;)  
+
+# Con la siguiente función podrás ver solo una parte del datasets, específicamente las dos primeras columnas. 
+
+head(paquetes$info[[2]]) </code></pre>
+<pre><code>## [1] &quot;AirPassengers           Monthly Airline Passenger Numbers 1949-1960&quot;   
+## [2] &quot;BJsales                 Sales Data with Leading Indicator&quot;             
+## [3] &quot;BOD                     Biochemical Oxygen Demand&quot;                     
+## [4] &quot;CO2                     Carbon Dioxide Uptake in Grass Plants&quot;         
+## [5] &quot;ChickWeight             Weight versus age of chicks on different diets&quot;
+## [6] &quot;DNase                   Elisa assay of DNase&quot;</code></pre>
+<p>Si quieres utilizar, por ejemplo, el datasets BOD, debes ejecutar la
+siguiente línea:</p>
+<pre class="r"><code>BOD</code></pre>
+<pre><code>##   Time demand
+## 1    1    8.3
+## 2    2   10.3
+## 3    3   19.0
+## 4    4   16.0
+## 5    5   15.6
+## 6    7   19.8</code></pre>
+<pre class="r"><code># En este paso estamos guardando los datos de BOD como un dataframe llamado &quot;data_BOD&quot;.
+data_BOD &lt;- as.data.frame(BOD)</code></pre>
+</div>
+<div id="a-través-del-menú" class="section level4">
+<h4>4.2 A través del menú</h4>
+<p>RStudio permite cargar datos a través de menús <strong>(File &gt;
+Import Dataset)</strong>. Por medio de este proceso podrás cargar datos
+en formato CSV, EXCEL, SPSS, SAS Y STATA.</p>
+</div>
+</div>
+<div id="importar-datos-en-formato-excel" class="section level3">
+<h3>5) Importar datos en formato Excel</h3>
+<p>Para importar archivos en formato Excel hay varios paquetes, pero el
+que utiliza RStudio en sus menús es <code>readxl()</code>. Este paquete
+permite leer tanto ficheros .xls como .xlsx. Por ejemplo:</p>
+<pre class="r"><code>install.packages(&quot;readxl&quot;) </code></pre>
+<pre><code>## package &#39;readxl&#39; successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\Carlos Daniel\AppData\Local\Temp\RtmpqqLWR7\downloaded_packages</code></pre>
+<pre class="r"><code>library(readxl)
+
+#Guardamos el archivo de excel con el nombre &quot;data_wvs&quot; 
+data_wvs &lt;- read_excel(path = &quot;wvs_brasil.xlsx&quot;)
+View(data_wvs)</code></pre>
+<p>Sin embargo, la manera más simple de cargar la data es utilizando el
+paquete <code>rio()</code>, ya que utiliza un único código para
+diferentes tipos de archivo. Para ello, primero hay que asegurarse que
+el archivo descargado esté en el directorio que estés utilizando. Luego,
+se debe cargar la librería <code>rio()</code> y, en caso no la tengas
+aún, importarla.</p>
+<pre class="r"><code>install.packages(&quot;rio&quot;) # Instalar el paquete rio</code></pre>
+<pre><code>## Installing package into &#39;C:/Users/Carlos Daniel/AppData/Local/R/win-library/4.3&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre><code>## package &#39;rio&#39; successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\Carlos Daniel\AppData\Local\Temp\RtmpqqLWR7\downloaded_packages</code></pre>
+<pre class="r"><code>library(rio) # Cargar la librería río</code></pre>
+<p>Una vez cargada la librería, <code>rio()</code> permite cargar
+objetos de datos de cualquier formato.</p>
+<pre class="r"><code>wvs_brasil &lt;- import(&quot;wvs_brasil.xlsx&quot;)</code></pre>
+<p>Puedes encontrar el dataset en el repositorio de GitHub <a
+href="https://github.com/HBurkli/statistics-for-social-sciences.github.io/tree/main/Bases_de_datos">aqui</a>.</p>
+</div>
+<div id="importar-datos-desde-la-web-github" class="section level3">
+<h3>6) Importar datos desde la Web: GitHub</h3>
+<p>Para importar datos desde GitHub debes seguir dos simples pasos.
+Primero, debes instalar la liberaría repmis. Y, por último, copiar el
+link del repositorio en donde se encuentre el archivo.</p>
+<pre class="r"><code>install.packages(&quot;repmis&quot;)</code></pre>
+<pre><code>## package &#39;repmis&#39; successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\Carlos Daniel\AppData\Local\Temp\RtmpqqLWR7\downloaded_packages</code></pre>
+<pre class="r"><code>library(repmis)
+data_refugee &lt;- source_data(&quot;https://raw.githubusercontent.com/HBurkli/statistics-for-social-sciences.github.io/main/Bases_de_datos/Measuring%20state%20repressive%20repertoires%20with%20events.csv&quot;)</code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkd1YXJkYXIgeSBjYXJnYXIgZGF0b3MgYSBSIg0KYXV0aG9yOiAiQWxleGFuZHJhIEJydW4gQ29yb25hZG8geSBTZWJhc3Rpw6FuIERhbmllbCBHw7NtZXogRmFyamUiDQpkYXRlOiAiYHIgZm9ybWF0KFN5cy50aW1lKCksICclZCAlQiAlWScpYCINCm91dHB1dDogDQogIGh0bWxfZG9jdW1lbnQ6DQogICAgdG9jOiB0cnVlDQogICAgdG9jX2Zsb2F0OiB0cnVlDQogICAgY29sbGFwc2VkOiBmYWxzZQ0KICAgIG51bWJlcl9zZWN0aW9uczogZmFsc2UNCiAgICB0b2NfZGVwdGg6IDENCiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlDQogICAgdGhlbWU6IGZsYXRseQ0KICAgIGhpZ2hsaWdodDogdGV4dG1hdGUNCi0tLQ0KDQpgYGB7ciBlY2hvPUZBTFNFfQ0Kb3B0aW9ucyhyZXBvcyA9IGMoQ1JBTiA9ICJodHRwczovL2NyYW4ucnN0dWRpby5jb20vIikpDQpgYGANCg0KwqFIb2xhIQ0KDQpSIGVzIHVuIGxlbmd1YWplIGRlIHByb2dyYW1hY2nDs24gb3JpZW50YWRvIGFsIGFuw6FsaXNpcyBkZSBkYXRvcy4gVW5hIGRlIGxhcyBwcmltZXJhcyBhY2Npb25lcyBxdWUgdGVuZHJlbW9zIHF1ZSBoYWNlciBwYXJhIGVtcGV6YXIgdW4gYW7DoWxpc2lzIGVuIFIgZXMgY2FyZ2FyIGxvcyBkYXRvcy4gDQoNCkVuIGxhIHNpZ3VpZW50ZSBzZWNjacOzbiBzZSBlc3BlY2lmaWNhcsOhbiBsb3MgcGFzb3MgcGFyYSBpbXBvcnRhciBkYXRvcyBkZSBkaWZlcmVudGVzIGZvcm1hdG9zLiANCg0KIyMjIDEpIEVzdGFibGVjZXIgZGlyZWN0b3JpbyBkZSB0cmFiYWpvIA0KDQpDdWFuZG8gcXVpZXJhcyBjYXJnYXIgZGF0b3MgZGUgdHUgY29tcHV0YWRvcmEsIGRlYmVyw6FzIGVzdGFibGVjZXIgdHUgZGlyZWN0b3JpbyBkZSB0cmFiYWpvLiBFbCBkaXJlY3RvcmlvLCBvIHRhbWJpw6luIGxsYW1hZG8gY2FycGV0YSBkZSB0cmFiYWpvLCBlcyBlbCBsdWdhciBlbiB0dSBjb21wdXRhZG9yYSBkb25kZSBzZSBlbmN1ZW50cmFuIHRvZG9zIGxvcyBhcmNoaXZvcyBjb24gbG9zIHF1ZSBlc3RhcsOhcyB0cmFiYWphbmRvIGVuIFIuIEVzZSBzZXLDoSBlbCBsdWdhciBkb25kZSBSIHZhIGEgYnVzY2FyIGFyY2hpdm9zIHBhcmEgaW1wb3J0YXJsb3MgeSwgbHVlZ28sIGV4cG9ydGFybG9zLiANCg0KUGFyYSBlbmNvbnRyYXIgZWwgYWN0dWFsIGRpcmVjdG9yaW8gZGUgdHJhYmFqbyBzb2xvIHRpZW5lcyBxdWUgZXNjcmliaXIgbGEgZnVuY2nDs24gYGdldHdkKClgIGVuIGxhIGNvbnNvbGEgeSBlamVjdXRhcmxhLg0KDQpMdWVnbyBkZSBlamVjdXRhcmxhIHRlIG1vc3RyYXLDoSBsYSBydXRhIGRlbCBkaXJlY3RvcmlvIHF1ZSBlc3TDoSB1dGlsaXphbmRvIFIuDQoNClNpIGxvIHF1ZSBxdWllcmVzIGVzIGNhbWJpYXIgZWwgZGlyZWN0b3JpbyBkZSB0cmFiYWpvIGRlYmVzIHVzYXIgbGEgZnVuY2nDs24gYHNldHdkKClgLCBjb2xvY2FuZG8gY29tbyBhcmd1bWVudG8gbGEgbnVldmEgcnV0YSBkZWwgZGlyZWN0b3JpbyBxdWUgcXVpZXJhcyB1dGlsaXphciBlbnRyZSBjb21pbGxhcy4gDQoNClRhbWJpw6luIHB1ZWRlcyBlc3RhYmxlY2VyIGVsIGRpcmVjdG9yaW8gZGUgdHJhYmFqbyBkZXNkZSBlbCBtZW7DuiBkZSBSLiBUaWVuZXMgcXVlIGlyIGEgKipTZXNzaW9uID4gU2V0IFdvcmtpbmcgRGlyZWN0b3J5KiogeSBzZWxlY2Npb25hcyBsYSBvcGNpw7NuIHF1ZSBwcmVmaWVyYXMuICANCg0KRXhpc3RlbiB2YXJpYXMgcmF6b25lcyBwb3IgbGFzIHF1ZSBwb2Ryw61hcyBubyBzZXIgY2FwYXogZGUgY2FtYmlhciB0dSBkaXJlY3RvcmlvIGRlIHRyYWJham8uIEFsZ3VuYXMgZGUgbGFzIG9wY2lvbmVzIHF1ZSBwdWVkZXMgcmVhbGl6YXIgcGFyYSBldml0YXIgZXN0ZSBlcnJvciBzb246IA0KLSBDb21wcm9iYXIgcXVlIG5vIGhheWFzIGVzY3JpdG8gbWFsIGxhIHJ1dGEuIA0KLSBBc2VndXJhcnRlIGRlIHF1ZSBlbCBkaXJlY3RvcmlvIG5vIGNvbnRlbmdhIGNhcmFjdGVyZXMgaW52w6FsaWRvcyBjb21vIGFjZW50b3MgbyBjb3JjaGV0ZXMuIA0KLSBDb21wcm9iYXIgZGUgcXVlIHRpZW5lcyBwZXJtaXNvcyBkZSBhZG1pbmlzdHJhZG9yLiANCg0KIyMjIDIpIFRpcG9zIGRlIGZvcm1hdG8gZGUgZGF0b3MNCg0KRXhpc3RlIHVuYSB2YXJpZWRhZCBkZSBmb3JtYXRvcyBwYXJhIGxvcyBkYXRvcywgcGVybyBub3MgY2VudHJhcmVtb3MgZW4gYXF1ZWxsb3MgcXVlIHB1ZWRhbiBndWFyZGFyc2UgZW4gaG9qYXMgZGUgY8OhbGN1bG8uIEVzdG8gc2UgZGViZSBhIHF1ZSBlc3RhIGVzIGxhIGZvcm1hIGVuIGxhIHF1ZSBoYWJpdHVhbG1lbnRlIHNlIHRyYWJhamEgY29uIGRhdG9zIGVuIGxhcyBjaWVuY2lhcyBzb2NpYWxlcy4NCg0KYS4gRGF0b3MgZW4gZm9ybWF0byB0ZXh0byAobyB0YWJ1bGFyZXMpIA0KLSBDU1Y6IC5jc3YgKHN1IG5vbWJyZSBjb21wbGV0byBlcyBjb21tYSBzZXBhcmF0ZWQgdmFsdWVzIG8sIGVuIGVzcGHDsW9sLCBkYXRvcyBzZXBhcmFkb3MgcG9yIGNvbWFzKSANCi0gT3Ryb3MgZGF0b3MgZW4gZm9ybWF0byB0ZXh0byANCg0KYi4gRm9ybWF0b3MgZGUgb3Ryb3MgcHJvZ3JhbWFzIA0KLSBFWENFTDogLnhscyB5IC54bHN4IA0KLSBTUFNTOiAuc2F2IHkgLnBvciANCi0gU1RBVEE6IC5kdGEgDQotIFNBUzogLnNhcyANCg0KYy4gRm9ybWF0b3MgcHJvcGlvcyBkZSBSIA0KLSBSIG9iamVjdHM6IC5SRGF0YSBvIC5yZGEgDQotIFNlcmlhbGl6ZWQgUiBvYmplY3RzOiAucmRzIA0KDQpkLiBPdHJvcyBmb3JtYXRvcyANCi0gSlNPTiANCi0gWE1MIA0KDQojIyMgMykgT2JqZXRvcyBkZSBkYXRhIGRlIFINCg0KUiB0ZSBwZXJtaXRlIGd1YXJkYXIgeSBjYXJnYXIgb2JqZXRvcyBkZSBkYXRhLiBEZSBlc3RlIG1vZG8sIHB1ZWRlcyBlbXBsZWFyIGJhc2VzIGRlIGRhdG9zIGV4dGVybmFzIHkgYXBsaWNhcmxlcyB0b2RvIGxvIHF1ZSBSIHRpZW5lIHBhcmEgb2ZyZWNlci4NCg0KUHJpbWVybyBjcmVlbW9zIHVuIG9iamV0byBlbiBSLiBQYXJhIGVsbG8sIGNyZWFyZW1vcyBkaWZlcmVudGVzIHZlY3RvcmVzIHF1ZSwgdW5pZG9zLCBmb3JtYW4gdW5hIGRhdGEuDQoNCmBgYHtyfQ0KIyBWZWN0b3Jlcw0KTsO6bWVybyA8LSBjKDEsMiwzLDQsNSkgDQpMZXRyYSA8LSBjKCJBIiwiQiIsIkMiLCJEIiwiRSIpDQpDaXVkYWQgPC0gYygiQW1zdGVyZGFtIiwgIkJpbGJhbyIsICJDYXNhYmxhbmNhIiwgIkRha2FyIiwgIkVib2xvd2EiKQ0KDQojIERhdGENCkRhdGExIDwtIGRhdGEuZnJhbWUoTsO6bWVybywgTGV0cmEsIENpdWRhZCkNCkRhdGExDQoNCmBgYA0KDQpSZWN1ZXJkYSBxdWUgZXMgaW1wb3J0YW50ZSBzZWxlY2Npb25hciBlbCBkaXJlY3RvcmlvIGRlIHRyYWJham8gcGFyYSBlbCBndWFyZGFkbyB5IGNhcmdhZG8gZGUgb2JqZXRvcyBkZSBkYXRhLg0KDQpBaG9yYSBxdWUgaGFzIGNyZWFkbyBlbCBvYmpldG8gZGUgZGF0YSwgbGEgZm9ybWEgbcOhcyBmw6FjaWwgZGUgZ3VhcmRhcmxvIGVzIGNvbiBsYSBmdW5jacOzbiBgc2F2ZSgpYC4gRWwgY8OzZGlnbyBwYXJhIGhhY2VyIGVzIGVsIHNpZ3VpZW50ZToNCg0KPGNlbnRlcj4NCioqc2F2ZShub21icmUgZGVsIG9iamV0bywgZmlsZSA9ICJkaXJlY2Npw7NuIGRlbCBkaXJlY3RvcmlvL25vbWJyZSBwYXJhIGVsIGFyY2hpdm8uUkRhdGEiKSoqDQo8L2NlbnRlcj4NCg0KTsOzdGVzZSBlbCB1c28gZGUgbGFzICIvIiB5IG5vIGxhICJcIiwgcXVlIHN1ZWxlbiBjb25mdW5kaXJzZS4gVW5hIHZleiBxdWUgZWwgb2JqZXRvIGRlIGRhdGEgZXMgZ3VhcmRhZG8gZW4gbGEgZGlyZWNjacOzbiBpbmRpY2FkYSwgbG8gcHVlZGVzIGNhcmdhciBjdWFuZG8gcXVpZXJhcyBjb24gbGEgZnVuY2nDs24gYGxvYWQoKWAuDQoNCiMjIyA0KSBJbXBvcnRhciBkYXRvcyBkZXNkZSBSDQoNCiMjIyMgNC4xIERhdG9zIHByZWNhcmdhZG9zIGVuIFINCg0KUi1iYXNlIHZpZW5lIGNvbiBtdWNob3MgZGF0b3MgcHJlY2FyZ2Fkb3MsIGVzcGVjw61maWNhbWVudGUgZW4gZWwgcGFja2FnZSBkYXRhc2V0cy4gUGFyYSBwb2RlciB2ZXIgbG9zIGRhdG9zIHByZWNhcmdhZG9zIHkgZGlzcG9uaWJsZXMgZW4gUiBkZWJlcyBoYWNlciBsbyBzaWd1aWVudGU6ICANCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCiMgRW4gZXN0ZSBwYXNvIGd1YXJkYXMgZWwgZGF0YXNldHMgZGUgUiBlbiB1biBvYmpldG8gbGxhbWFkbyDigJxwYXF1ZXRlc+KAnS4gDQoNCnBhcXVldGVzIDwtIGxpYnJhcnkoaGVscCA9ICJkYXRhc2V0cyIpICANCg0KIyBDb24gbGEgc2lndWllbnRlIGZ1bmNpw7NuIHBvZHLDoXMgdmVyIHNvbG8gdW5hIHBhcnRlIGRlbCBkYXRhc2V0cywgZXNwZWPDrWZpY2FtZW50ZSBsYXMgZG9zIHByaW1lcmFzIGNvbHVtbmFzLiANCg0KaGVhZChwYXF1ZXRlcyRpbmZvW1syXV0pIA0KYGBgDQpTaSBxdWllcmVzIHV0aWxpemFyLCBwb3IgZWplbXBsbywgZWwgZGF0YXNldHMgQk9ELCBkZWJlcyBlamVjdXRhciBsYSBzaWd1aWVudGUgbMOtbmVhOiANCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCkJPRA0KDQojIEVuIGVzdGUgcGFzbyBlc3RhbW9zIGd1YXJkYW5kbyBsb3MgZGF0b3MgZGUgQk9EIGNvbW8gdW4gZGF0YWZyYW1lIGxsYW1hZG8gImRhdGFfQk9EIi4NCmRhdGFfQk9EIDwtIGFzLmRhdGEuZnJhbWUoQk9EKQ0KYGBgDQoNCiMjIyMgNC4yIEEgdHJhdsOpcyBkZWwgbWVuw7oNCg0KUlN0dWRpbyBwZXJtaXRlIGNhcmdhciBkYXRvcyBhIHRyYXbDqXMgZGUgbWVuw7pzICoqKEZpbGUgPiBJbXBvcnQgRGF0YXNldCkqKi4gUG9yIG1lZGlvIGRlIGVzdGUgcHJvY2VzbyBwb2Ryw6FzIGNhcmdhciBkYXRvcyBlbiBmb3JtYXRvIENTViwgRVhDRUwsIFNQU1MsIFNBUyBZIFNUQVRBLg0KDQojIyMgNSkgSW1wb3J0YXIgZGF0b3MgZW4gZm9ybWF0byBFeGNlbA0KDQpQYXJhIGltcG9ydGFyIGFyY2hpdm9zIGVuIGZvcm1hdG8gRXhjZWwgaGF5IHZhcmlvcyBwYXF1ZXRlcywgcGVybyBlbCBxdWUgdXRpbGl6YSBSU3R1ZGlvIGVuIHN1cyBtZW7DunMgZXMgYHJlYWR4bCgpYC4gRXN0ZSBwYXF1ZXRlIHBlcm1pdGUgbGVlciB0YW50byBmaWNoZXJvcyAueGxzIGNvbW8gLnhsc3guIFBvciBlamVtcGxvOiANCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmluc3RhbGwucGFja2FnZXMoInJlYWR4bCIpIA0KbGlicmFyeShyZWFkeGwpDQoNCiNHdWFyZGFtb3MgZWwgYXJjaGl2byBkZSBleGNlbCBjb24gZWwgbm9tYnJlICJkYXRhX3d2cyIgDQpkYXRhX3d2cyA8LSByZWFkX2V4Y2VsKHBhdGggPSAid3ZzX2JyYXNpbC54bHN4IikNClZpZXcoZGF0YV93dnMpDQpgYGANCg0KU2luIGVtYmFyZ28sIGxhIG1hbmVyYSBtw6FzIHNpbXBsZSBkZSBjYXJnYXIgbGEgZGF0YSBlcyB1dGlsaXphbmRvIGVsIHBhcXVldGUgYHJpbygpYCwgeWEgcXVlIHV0aWxpemEgdW4gw7puaWNvIGPDs2RpZ28gcGFyYSBkaWZlcmVudGVzIHRpcG9zIGRlIGFyY2hpdm8uIFBhcmEgZWxsbywgcHJpbWVybyBoYXkgcXVlIGFzZWd1cmFyc2UgcXVlIGVsIGFyY2hpdm8gZGVzY2FyZ2FkbyBlc3TDqSBlbiBlbCBkaXJlY3RvcmlvIHF1ZSBlc3TDqXMgdXRpbGl6YW5kby4gTHVlZ28sIHNlIGRlYmUgY2FyZ2FyIGxhIGxpYnJlcsOtYSBgcmlvKClgIHksIGVuIGNhc28gbm8gbGEgdGVuZ2FzIGHDum4sIGltcG9ydGFybGEuDQoNCmBgYHtyIHdhcm5pbmc9RkFMU0V9DQppbnN0YWxsLnBhY2thZ2VzKCJyaW8iKSAjIEluc3RhbGFyIGVsIHBhcXVldGUgcmlvDQpsaWJyYXJ5KHJpbykgIyBDYXJnYXIgbGEgbGlicmVyw61hIHLDrW8NCmBgYA0KDQpVbmEgdmV6IGNhcmdhZGEgbGEgbGlicmVyw61hLCBgcmlvKClgIHBlcm1pdGUgY2FyZ2FyIG9iamV0b3MgZGUgZGF0b3MgZGUgY3VhbHF1aWVyIGZvcm1hdG8uDQoNCmBgYHtyfQ0Kd3ZzX2JyYXNpbCA8LSBpbXBvcnQoInd2c19icmFzaWwueGxzeCIpDQpgYGANCg0KUHVlZGVzIGVuY29udHJhciBlbCBkYXRhc2V0IGVuIGVsIHJlcG9zaXRvcmlvIGRlIEdpdEh1YiBbYXF1aV0oaHR0cHM6Ly9naXRodWIuY29tL0hCdXJrbGkvc3RhdGlzdGljcy1mb3Itc29jaWFsLXNjaWVuY2VzLmdpdGh1Yi5pby90cmVlL21haW4vQmFzZXNfZGVfZGF0b3MpLg0KDQojIyMgNikgSW1wb3J0YXIgZGF0b3MgZGVzZGUgbGEgV2ViOiBHaXRIdWINCg0KUGFyYSBpbXBvcnRhciBkYXRvcyBkZXNkZSBHaXRIdWIgZGViZXMgc2VndWlyIGRvcyBzaW1wbGVzIHBhc29zLiBQcmltZXJvLCBkZWJlcyBpbnN0YWxhciBsYSBsaWJlcmFyw61hIHJlcG1pcy4gWSwgcG9yIMO6bHRpbW8sIGNvcGlhciBlbCBsaW5rIGRlbCByZXBvc2l0b3JpbyBlbiBkb25kZSBzZSBlbmN1ZW50cmUgZWwgYXJjaGl2by4NCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmluc3RhbGwucGFja2FnZXMoInJlcG1pcyIpDQpsaWJyYXJ5KHJlcG1pcykNCmRhdGFfcmVmdWdlZSA8LSBzb3VyY2VfZGF0YSgiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0hCdXJrbGkvc3RhdGlzdGljcy1mb3Itc29jaWFsLXNjaWVuY2VzLmdpdGh1Yi5pby9tYWluL0Jhc2VzX2RlX2RhdG9zL01lYXN1cmluZyUyMHN0YXRlJTIwcmVwcmVzc2l2ZSUyMHJlcGVydG9pcmVzJTIwd2l0aCUyMGV2ZW50cy5jc3YiKQ0KYGBgDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg==</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Cargar y guardar datos en R_F.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

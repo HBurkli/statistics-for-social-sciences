@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Alexandra Brun Coronado" />
+
+
+<title>Tipos y estructuras de datos</title>
+
+<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Prueba1</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="El-lenguaje-de-R_F.html">Lenguaje de R</a>
+</li>
+<li>
+  <a href="Limpieza-de-datos_F.html">Limpieza de datos</a>
+</li>
+<li>
+  <a href="Operaciones-Básicas-de-R_F.html">Operaciones básicas de R</a>
+</li>
+<li>
+  <a href="Tipo-y-estructuras-de-datos_F.html">Tipos y estructuras de datos</a>
+</li>
+<li>
+  <a href="Tablas-I_F.html">Tablas I</a>
+</li>
+<li>
+  <a href="Tablas-III_F.html">Tablas III</a>
+</li>
+<li>
+  <a href="Cargar-y-guardar-datos-en-R_F.html">Cargar y guardar datos en R</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Tipos y estructuras de datos</h1>
+<h4 class="author">Alexandra Brun Coronado</h4>
+<h4 class="date">22 Noviembre 2023</h4>
+
+</div>
+
+
+<p>¡Hola!</p>
+<p>RStudio tiene la capacidad de manejar diversos tipos de datos. Al
+referirse a tipos de datos en R, se habla de los objetos más básicos que
+se pueden manipular también conocidos como datos atómicos. A
+continuación, se detallará los distintos tipos de datos, así como
+algunas de las estructuras en las que se pueden almacenar.</p>
+<div id="tipos-de-datos" class="section level3">
+<h3>1) Tipos de datos</h3>
+<div id="numéricos" class="section level4">
+<h4>1.1 Numéricos</h4>
+<div id="numeric-o-double" class="section level5">
+<h5>1.1.1 Numeric o double</h5>
+<p>En R <em>double</em> es la representación de un número real, es
+decir, número con decimales.</p>
+<pre class="r"><code>numero_double &lt;- 16.12
+numero_double</code></pre>
+<pre><code>## [1] 16.12</code></pre>
+<p>Se puede consultar la clase del objeto a través de la función
+<code>class()</code>.</p>
+<pre class="r"><code>class(numero_double)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<p>Sin embargo, también se puede saber el tipo de dato por medio de la
+función <code>typeof()</code>:</p>
+<pre class="r"><code>typeof(numero_double)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+</div>
+<div id="integer" class="section level5">
+<h5>1.1.2 Integer</h5>
+<p>Integer es la tipificación para los números enteros en R.</p>
+<pre class="r"><code>numero_entero &lt;- 9
+class(numero_entero)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>typeof(numero_entero)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<p>Todos los números en R (enteros o decimales) se tipifican como
+numeric; no obstante, se puede forzar a R para que lo entienda
+específicamente como entero agregando una <em>L</em>. Por ejemplo:</p>
+<pre class="r"><code>int &lt;- 5L
+typeof(int)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+</div>
+</div>
+<div id="character" class="section level4">
+<h4>1.2 Character</h4>
+<p>Los caracteres o las cadenas de caracteres representan símbolos,
+letras, palabras o frases. En R todo texto debe estar siempre escrito
+entre comillas.</p>
+<pre class="r"><code>character &lt;- &quot;paz&quot; #El uso de comillas simples o dobles es equivalente.
+class(character)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+</div>
+<div id="complex" class="section level4">
+<h4>1.3 Complex</h4>
+<p>El tipo de dato complejo es un objeto que incluye un número
+imaginario.</p>
+<pre class="r"><code>complex &lt;- 2 + 8i
+typeof(complex)</code></pre>
+<pre><code>## [1] &quot;complex&quot;</code></pre>
+</div>
+<div id="logical" class="section level4">
+<h4>1.4 Logical</h4>
+<p>Este tipo de dato está compuesto por los valores <em>TRUE</em>
+(verdadero) y <em>FALSE</em> (falso). Suele ser el resultado de
+operaciones lógicas.</p>
+<pre class="r"><code>logicoT &lt;- TRUE
+logicoF &lt;- FALSE
+typeof(logicoT)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<pre class="r"><code>typeof(logicoF)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<p>Otra forma de verlo es la siguiente:</p>
+<pre class="r"><code>a &lt;- 7
+b &lt;- 10
+a&lt;b</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="factor" class="section level4">
+<h4>1.5 Factor</h4>
+<p>Estrictamente, no es un tipo de dato. Un factor es una variable
+categórica con un número determinado de valores o niveles. En R se
+utilizan para clasificar los datos por medio de grupos o categorías
+determinados por los niveles del factor.</p>
+<p>Se pueden crear con la función <code>factor()</code>.</p>
+<pre class="r"><code>vector_paisesAP &lt;- factor (c(&quot;p&quot;, &quot;m&quot;, &quot;ch&quot;, &quot;c&quot;, &quot;p&quot;, &quot;m&quot;, &quot;m&quot;, &quot;c&quot;, &quot;c&quot;))
+class(vector_paisesAP)</code></pre>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<p>Sin embargo, se puede utilizar una sintaxis más específica para
+determinar los niveles del factor (levels) y asignar etiquetas (labels)
+respectivamente.</p>
+<pre class="r"><code>vector_paisesAP &lt;- factor(vector_paisesAP, levels=c(&quot;p&quot;,&quot;m&quot;,&quot;ch&quot;,&quot;c&quot;), labels=c(&quot;Peru&quot;,&quot;Mexico&quot;,&quot;Chile&quot;,&quot;Colombia&quot;))
+vector_paisesAP</code></pre>
+<pre><code>## [1] Peru     Mexico   Chile    Colombia Peru     Mexico   Mexico   Colombia
+## [9] Colombia
+## Levels: Peru Mexico Chile Colombia</code></pre>
+</div>
+</div>
+<div id="estructuras-de-datos" class="section level3">
+<h3>2) Estructuras de datos</h3>
+<div id="secuencias-numéricas" class="section level4">
+<h4>2.1 Secuencias numéricas</h4>
+<pre class="r"><code>1:15</code></pre>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15</code></pre>
+<pre class="r"><code>15:1</code></pre>
+<pre><code>##  [1] 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1</code></pre>
+<pre class="r"><code>seq(1,20) #Puede leerse como secuencia del 1 al 20.</code></pre>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20</code></pre>
+<pre class="r"><code>seq(0, 10, by = 0.5) #Puede leerse como una secuencia del 0 al 10, pero con una diferencia de 0.5 entre cada elemento.</code></pre>
+<pre><code>##  [1]  0.0  0.5  1.0  1.5  2.0  2.5  3.0  3.5  4.0  4.5  5.0  5.5  6.0  6.5  7.0
+## [16]  7.5  8.0  8.5  9.0  9.5 10.0</code></pre>
+</div>
+<div id="listas" class="section level4">
+<h4>2.2 Listas</h4>
+<p>Una lista es una colección de elementos que pueden ser de distinto
+tipo.</p>
+<pre class="r"><code>x &lt;- c(1, 2, 3, 4, 5)
+y &lt;- c(&quot;America&quot;, &quot;Europa&quot;, &quot;Asia&quot;, &quot;Africa&quot;, &quot;Antartida&quot;)
+lista &lt;- list(x, y)
+lista</code></pre>
+<pre><code>## [[1]]
+## [1] 1 2 3 4 5
+## 
+## [[2]]
+## [1] &quot;America&quot;   &quot;Europa&quot;    &quot;Asia&quot;      &quot;Africa&quot;    &quot;Antartida&quot;</code></pre>
+</div>
+<div id="matrices-y-data-frames" class="section level4">
+<h4>2.3 Matrices y Data Frames</h4>
+<p>Ambos representan datos “rectangulares”, lo cual quiere decir que se
+usan para almacenar datos tabulares, con filas y columnas. Se
+diferencian en que las matrices solo pueden contener una sola clase de
+datos, mientras que los data frames pueden contener diversas clases de
+datos.</p>
+<div id="matrices" class="section level5">
+<h5>2.3.1 Matrices</h5>
+<p>Una matriz es una estructura bidimensional donde las filas son
+horizontales y las columnas verticales. Por ejemplo, una matriz de 5 por
+6 (5x6) tiene 5 filas y 6 columnas. Para crear una matriz se puede
+utilizar la función <code>matrix()</code>.</p>
+<pre class="r"><code>matriz &lt;- matrix(1:15, 5, 3) #El primer argumento hace referencia a los datos , el segundo argumento hace referencia al número de  filas (5) y el último al número de columnas (3)
+class(matriz)</code></pre>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<pre class="r"><code>matriz</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    6   11
+## [2,]    2    7   12
+## [3,]    3    8   13
+## [4,]    4    9   14
+## [5,]    5   10   15</code></pre>
+</div>
+<div id="data-frames" class="section level5">
+<h5>2.3.2 Data Frames</h5>
+<p>Un data frame también es una estructura de datos bidimensional, pero
+es una lista de vectores de la misma longitud. Para crear una matriz se
+puede utilizar la función <code>data.frame()</code>.</p>
+<pre class="r"><code>consejo_seguridad &lt;- c(&quot;EEUU&quot;, &quot;China&quot;, &quot;Rusia&quot;, &quot;Francia&quot;, &quot;ReinoUnido&quot;) #Se crea un vector para realizar el ejemplo
+
+mi_dataframe &lt;- data.frame(consejo_seguridad, matriz)
+class(mi_dataframe)</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre class="r"><code>mi_dataframe</code></pre>
+<pre><code>##   consejo_seguridad X1 X2 X3
+## 1              EEUU  1  6 11
+## 2             China  2  7 12
+## 3             Rusia  3  8 13
+## 4           Francia  4  9 14
+## 5        ReinoUnido  5 10 15</code></pre>
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRpcG9zIHkgZXN0cnVjdHVyYXMgZGUgZGF0b3MiDQphdXRob3I6ICJBbGV4YW5kcmEgQnJ1biBDb3JvbmFkbyINCmRhdGU6ICJgciBmb3JtYXQoU3lzLnRpbWUoKSwgJyVkICVCICVZJylgIg0Kb3V0cHV0Og0KICBodG1sX2RvY3VtZW50Og0KICAgIHRvYzogdHJ1ZQ0KICAgIHRvY19mbG9hdDogdHJ1ZQ0KICAgIGNvbGxhcHNlZDogZmFsc2UNCiAgICBudW1iZXJfc2VjdGlvbnM6IGZhbHNlDQogICAgdG9jX2RlcHRoOiAxDQogICAgY29kZV9kb3dubG9hZDogdHJ1ZQ0KICAgIHRoZW1lOiBmbGF0bHkNCiAgICBoaWdobGlnaHQ6IHRleHRtYXRlDQotLS0NCg0KwqFIb2xhIQ0KDQpSU3R1ZGlvIHRpZW5lIGxhIGNhcGFjaWRhZCBkZSBtYW5lamFyIGRpdmVyc29zIHRpcG9zIGRlIGRhdG9zLiBBbCByZWZlcmlyc2UgYSB0aXBvcyBkZSBkYXRvcyBlbiBSLCBzZSBoYWJsYSBkZSBsb3Mgb2JqZXRvcyBtw6FzIGLDoXNpY29zIHF1ZSBzZSBwdWVkZW4gbWFuaXB1bGFyIHRhbWJpw6luIGNvbm9jaWRvcyBjb21vIGRhdG9zIGF0w7NtaWNvcy4gQSBjb250aW51YWNpw7NuLCBzZSBkZXRhbGxhcsOhIGxvcyBkaXN0aW50b3MgdGlwb3MgZGUgZGF0b3MsIGFzw60gY29tbyBhbGd1bmFzIGRlIGxhcyBlc3RydWN0dXJhcyBlbiBsYXMgcXVlIHNlIHB1ZWRlbiBhbG1hY2VuYXIuDQoNCiMjIyAxKSBUaXBvcyBkZSBkYXRvcw0KDQojIyMjIDEuMSBOdW3DqXJpY29zDQoNCiMjIyMjIDEuMS4xIE51bWVyaWMgbyBkb3VibGUNCg0KRW4gUiAqZG91YmxlKiBlcyBsYSByZXByZXNlbnRhY2nDs24gZGUgdW4gbsO6bWVybyByZWFsLCBlcyBkZWNpciwgbsO6bWVybyBjb24gZGVjaW1hbGVzLiANCg0KYGBge3J9DQpudW1lcm9fZG91YmxlIDwtIDE2LjEyDQpudW1lcm9fZG91YmxlDQpgYGANCg0KU2UgcHVlZGUgY29uc3VsdGFyIGxhIGNsYXNlIGRlbCBvYmpldG8gYSB0cmF2w6lzIGRlIGxhIGZ1bmNpw7NuIGBjbGFzcygpYC4NCg0KYGBge3J9DQpjbGFzcyhudW1lcm9fZG91YmxlKQ0KYGBgDQoNClNpbiBlbWJhcmdvLCB0YW1iacOpbiBzZSBwdWVkZSBzYWJlciBlbCB0aXBvIGRlIGRhdG8gcG9yIG1lZGlvIGRlIGxhIGZ1bmNpw7NuIGB0eXBlb2YoKWA6DQoNCmBgYHtyfQ0KdHlwZW9mKG51bWVyb19kb3VibGUpDQpgYGANCg0KIyMjIyMgMS4xLjIgSW50ZWdlcg0KDQpJbnRlZ2VyIGVzIGxhIHRpcGlmaWNhY2nDs24gcGFyYSBsb3MgbsO6bWVyb3MgZW50ZXJvcyBlbiBSLg0KDQpgYGB7cn0NCm51bWVyb19lbnRlcm8gPC0gOQ0KY2xhc3MobnVtZXJvX2VudGVybykNCnR5cGVvZihudW1lcm9fZW50ZXJvKQ0KYGBgDQoNClRvZG9zIGxvcyBuw7ptZXJvcyBlbiBSIChlbnRlcm9zIG8gZGVjaW1hbGVzKSBzZSB0aXBpZmljYW4gY29tbyBudW1lcmljOyBubyBvYnN0YW50ZSwgc2UgcHVlZGUgZm9yemFyIGEgUiBwYXJhIHF1ZSBsbyBlbnRpZW5kYSBlc3BlY8OtZmljYW1lbnRlIGNvbW8gZW50ZXJvIGFncmVnYW5kbyB1bmEgKkwqLiBQb3IgZWplbXBsbzoNCg0KYGBge3J9DQppbnQgPC0gNUwNCnR5cGVvZihpbnQpDQpgYGANCg0KIyMjIyAxLjIgQ2hhcmFjdGVyDQoNCkxvcyBjYXJhY3RlcmVzIG8gbGFzIGNhZGVuYXMgZGUgY2FyYWN0ZXJlcyByZXByZXNlbnRhbiBzw61tYm9sb3MsIGxldHJhcywgcGFsYWJyYXMgbyBmcmFzZXMuIEVuIFIgdG9kbyB0ZXh0byBkZWJlIGVzdGFyIHNpZW1wcmUgZXNjcml0byBlbnRyZSBjb21pbGxhcy4NCg0KYGBge3J9DQpjaGFyYWN0ZXIgPC0gInBheiIgI0VsIHVzbyBkZSBjb21pbGxhcyBzaW1wbGVzIG8gZG9ibGVzIGVzIGVxdWl2YWxlbnRlLg0KY2xhc3MoY2hhcmFjdGVyKQ0KYGBgDQoNCiMjIyMgMS4zIENvbXBsZXgNCg0KRWwgdGlwbyBkZSBkYXRvIGNvbXBsZWpvIGVzIHVuIG9iamV0byBxdWUgaW5jbHV5ZSB1biBuw7ptZXJvIGltYWdpbmFyaW8uDQoNCmBgYHtyfQ0KY29tcGxleCA8LSAyICsgOGkNCnR5cGVvZihjb21wbGV4KQ0KYGBgDQoNCiMjIyMgMS40IExvZ2ljYWwNCg0KRXN0ZSB0aXBvIGRlIGRhdG8gZXN0w6EgY29tcHVlc3RvIHBvciBsb3MgdmFsb3JlcyAqVFJVRSogKHZlcmRhZGVybykgeSAqRkFMU0UqIChmYWxzbykuIFN1ZWxlIHNlciBlbCByZXN1bHRhZG8gZGUgb3BlcmFjaW9uZXMgbMOzZ2ljYXMuDQoNCmBgYHtyfQ0KbG9naWNvVCA8LSBUUlVFDQpsb2dpY29GIDwtIEZBTFNFDQp0eXBlb2YobG9naWNvVCkNCnR5cGVvZihsb2dpY29GKQ0KYGBgDQoNCk90cmEgZm9ybWEgZGUgdmVybG8gZXMgbGEgc2lndWllbnRlOg0KDQpgYGB7cn0NCmEgPC0gNw0KYiA8LSAxMA0KYTxiDQpgYGANCg0KIyMjIyAxLjUgRmFjdG9yDQpFc3RyaWN0YW1lbnRlLCBubyBlcyB1biB0aXBvIGRlIGRhdG8uIFVuIGZhY3RvciBlcyB1bmEgdmFyaWFibGUgY2F0ZWfDs3JpY2EgY29uIHVuIG7Dum1lcm8gZGV0ZXJtaW5hZG8gZGUgdmFsb3JlcyBvIG5pdmVsZXMuIEVuIFIgc2UgdXRpbGl6YW4gcGFyYSBjbGFzaWZpY2FyIGxvcyBkYXRvcyBwb3IgbWVkaW8gZGUgZ3J1cG9zIG8gY2F0ZWdvcsOtYXMgZGV0ZXJtaW5hZG9zIHBvciBsb3Mgbml2ZWxlcyBkZWwgZmFjdG9yLiANCg0KU2UgcHVlZGVuIGNyZWFyIGNvbiBsYSBmdW5jacOzbiBgZmFjdG9yKClgLg0KDQpgYGB7cn0NCnZlY3Rvcl9wYWlzZXNBUCA8LSBmYWN0b3IgKGMoInAiLCAibSIsICJjaCIsICJjIiwgInAiLCAibSIsICJtIiwgImMiLCAiYyIpKQ0KY2xhc3ModmVjdG9yX3BhaXNlc0FQKQ0KYGBgDQoNClNpbiBlbWJhcmdvLCBzZSBwdWVkZSB1dGlsaXphciB1bmEgc2ludGF4aXMgbcOhcyBlc3BlY8OtZmljYSBwYXJhIGRldGVybWluYXIgbG9zIG5pdmVsZXMgZGVsIGZhY3RvciAobGV2ZWxzKSB5IGFzaWduYXIgZXRpcXVldGFzIChsYWJlbHMpIHJlc3BlY3RpdmFtZW50ZS4NCg0KYGBge3J9DQp2ZWN0b3JfcGFpc2VzQVAgPC0gZmFjdG9yKHZlY3Rvcl9wYWlzZXNBUCwgbGV2ZWxzPWMoInAiLCJtIiwiY2giLCJjIiksIGxhYmVscz1jKCJQZXJ1IiwiTWV4aWNvIiwiQ2hpbGUiLCJDb2xvbWJpYSIpKQ0KdmVjdG9yX3BhaXNlc0FQDQpgYGANCg0KIyMjIDIpIEVzdHJ1Y3R1cmFzIGRlIGRhdG9zDQoNCiMjIyMgMi4xIFNlY3VlbmNpYXMgbnVtw6lyaWNhcw0KDQpgYGB7cn0NCjE6MTUNCjE1OjENCnNlcSgxLDIwKSAjUHVlZGUgbGVlcnNlIGNvbW8gc2VjdWVuY2lhIGRlbCAxIGFsIDIwLg0Kc2VxKDAsIDEwLCBieSA9IDAuNSkgI1B1ZWRlIGxlZXJzZSBjb21vIHVuYSBzZWN1ZW5jaWEgZGVsIDAgYWwgMTAsIHBlcm8gY29uIHVuYSBkaWZlcmVuY2lhIGRlIDAuNSBlbnRyZSBjYWRhIGVsZW1lbnRvLg0KYGBgDQoNCiMjIyMgMi4yIExpc3Rhcw0KDQpVbmEgbGlzdGEgZXMgdW5hIGNvbGVjY2nDs24gZGUgZWxlbWVudG9zIHF1ZSBwdWVkZW4gc2VyIGRlIGRpc3RpbnRvIHRpcG8uDQoNCmBgYHtyfQ0KeCA8LSBjKDEsIDIsIDMsIDQsIDUpDQp5IDwtIGMoIkFtZXJpY2EiLCAiRXVyb3BhIiwgIkFzaWEiLCAiQWZyaWNhIiwgIkFudGFydGlkYSIpDQpsaXN0YSA8LSBsaXN0KHgsIHkpDQpsaXN0YQ0KYGBgDQoNCiMjIyMgMi4zIE1hdHJpY2VzIHkgRGF0YSBGcmFtZXMNCg0KQW1ib3MgcmVwcmVzZW50YW4gZGF0b3MgInJlY3Rhbmd1bGFyZXMiLCBsbyBjdWFsIHF1aWVyZSBkZWNpciBxdWUgc2UgdXNhbiBwYXJhIGFsbWFjZW5hciBkYXRvcyB0YWJ1bGFyZXMsIGNvbiBmaWxhcyB5IGNvbHVtbmFzLiBTZSBkaWZlcmVuY2lhbiBlbiBxdWUgbGFzIG1hdHJpY2VzIHNvbG8gcHVlZGVuIGNvbnRlbmVyIHVuYSBzb2xhIGNsYXNlIGRlIGRhdG9zLCBtaWVudHJhcyBxdWUgbG9zIGRhdGEgZnJhbWVzIHB1ZWRlbiBjb250ZW5lciBkaXZlcnNhcyBjbGFzZXMgZGUgZGF0b3MuDQoNCiMjIyMjIDIuMy4xIE1hdHJpY2VzDQoNClVuYSBtYXRyaXogZXMgdW5hIGVzdHJ1Y3R1cmEgYmlkaW1lbnNpb25hbCBkb25kZSBsYXMgZmlsYXMgc29uIGhvcml6b250YWxlcyB5IGxhcyBjb2x1bW5hcyB2ZXJ0aWNhbGVzLiBQb3IgZWplbXBsbywgdW5hIG1hdHJpeiBkZSA1IHBvciA2ICg1eDYpIHRpZW5lIDUgZmlsYXMgeSA2IGNvbHVtbmFzLiAgUGFyYSBjcmVhciB1bmEgbWF0cml6IHNlIHB1ZWRlIHV0aWxpemFyIGxhIGZ1bmNpw7NuIGBtYXRyaXgoKWAuDQoNCmBgYHtyfQ0KbWF0cml6IDwtIG1hdHJpeCgxOjE1LCA1LCAzKSAjRWwgcHJpbWVyIGFyZ3VtZW50byBoYWNlIHJlZmVyZW5jaWEgYSBsb3MgZGF0b3MgLCBlbCBzZWd1bmRvIGFyZ3VtZW50byBoYWNlIHJlZmVyZW5jaWEgYWwgbsO6bWVybyBkZSAgZmlsYXMgKDUpIHkgZWwgw7psdGltbyBhbCBuw7ptZXJvIGRlIGNvbHVtbmFzICgzKQ0KY2xhc3MobWF0cml6KQ0KbWF0cml6DQpgYGANCg0KIyMjIyMgMi4zLjIgRGF0YSBGcmFtZXMNCg0KVW4gZGF0YSBmcmFtZSB0YW1iacOpbiBlcyB1bmEgZXN0cnVjdHVyYSBkZSBkYXRvcyBiaWRpbWVuc2lvbmFsLCBwZXJvIGVzIHVuYSBsaXN0YSBkZSB2ZWN0b3JlcyBkZSBsYSBtaXNtYSBsb25naXR1ZC4gUGFyYSBjcmVhciB1bmEgbWF0cml6IHNlIHB1ZWRlIHV0aWxpemFyIGxhIGZ1bmNpw7NuIGBkYXRhLmZyYW1lKClgLg0KDQpgYGB7cn0NCmNvbnNlam9fc2VndXJpZGFkIDwtIGMoIkVFVVUiLCAiQ2hpbmEiLCAiUnVzaWEiLCAiRnJhbmNpYSIsICJSZWlub1VuaWRvIikgI1NlIGNyZWEgdW4gdmVjdG9yIHBhcmEgcmVhbGl6YXIgZWwgZWplbXBsbw0KDQptaV9kYXRhZnJhbWUgPC0gZGF0YS5mcmFtZShjb25zZWpvX3NlZ3VyaWRhZCwgbWF0cml6KQ0KY2xhc3MobWlfZGF0YWZyYW1lKQ0KbWlfZGF0YWZyYW1lDQpgYGANCg0KDQoNCg0KDQoNCg0KDQoNCg0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Tipo y estructuras de datos_F.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -2,7 +2,16 @@
 title: "El lenguaje de R"
 author: "Sebastian Torres Tapia"
 date: "2023-02-17"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    code_download: true
+    theme: flatly
+    highlight: textmate
 ---
 
 ```{r setup, include=FALSE}

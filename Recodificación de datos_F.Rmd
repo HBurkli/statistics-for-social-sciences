@@ -7,6 +7,11 @@ output: html_document
 
 ¡Hola!
 
+```{r echo=FALSE}
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+```
+
+
 En esta sección aprenderás a recodificar los datos. Lo primero que haremos será importar la Encuesta Mundial de Valores (WVS) 2018 de Brasil.
 
 ```{r message=FALSE, warning=FALSE}

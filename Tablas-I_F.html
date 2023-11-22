@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Sebastián Daniel Gómez Farje" />
+
+<meta name="date" content="2023-03-05" />
+
+<title>Tablas I</title>
+
+<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Prueba1</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="El-lenguaje-de-R_F.html">Lenguaje de R</a>
+</li>
+<li>
+  <a href="Limpieza-de-datos_F.html">Limpieza de datos</a>
+</li>
+<li>
+  <a href="Operaciones-Básicas-de-R_F.html">Operaciones básicas de R</a>
+</li>
+<li>
+  <a href="Tipo-y-estructuras-de-datos_F.html">Tipos y estructuras de datos</a>
+</li>
+<li>
+  <a href="Tablas-I_F.html">Tablas I</a>
+</li>
+<li>
+  <a href="Tablas-III_F.html">Tablas III</a>
+</li>
+<li>
+  <a href="Cargar-y-guardar-datos-en-R_F.html">Cargar y guardar datos en R</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Tablas I</h1>
+<h4 class="author">Sebastián Daniel Gómez Farje</h4>
+<h4 class="date">2023-03-05</h4>
+
+</div>
+
+
+<p>¡Hola!</p>
+<p>Una de las herramientas más útiles para la visualización de data son
+las tables. En esta primera parte sobre el tema de tablas en R,
+exploraremos las funciones básicas de <code>table()</code> y
+<code>prop.table()</code>. Primero, debemos cargar la data. Esta base de
+datos muestra los tiempos de víaje que realiza un conductor desde su
+casa a su lugar de trabajo. En total, incluye 14 variables.</p>
+<pre class="r"><code>Viajes &lt;- read.csv(&quot;https://raw.githubusercontent.com/HBurkli/statistics-for-social-sciences.github.io/main/Bases_de_datos/travel_times.csv&quot;)</code></pre>
+<div id="table" class="section level4">
+<h4>1) table()</h4>
+<p>Una vez descargada la base de datos, se puede acceder a toda la data
+seleccionando el objeto que acabamos de crear (Viajes) en la parte
+superior derecha de R. No obstante, la función <code>table()</code>
+permite examinar variables específicas.</p>
+<p>Lo primero que se debe de hacer es escribir la función y abrir el
+paréntesis. Luego, se seleccionan dos variables de la base de datos.
+Estas variables serán las filas y columnas de la tabla. Para seleccionar
+la variable dentro de <code>table()</code>, se sigue el siguiente
+formato: Data$Variable.</p>
+<pre class="r"><code># En este ejemplo, la Data es &quot;Viajes&quot; y las variables son &quot;GoingTo&quot; y &quot;DayOfWeek&quot;
+
+table(Viajes$GoingTo, Viajes$DayOfWeek)</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK      14     19       24      24        24
+##   Home     13     20       20      24        23</code></pre>
+<p>En esta nueva tabla, los valores de la primera variable (GoingTo) se
+convierten en las filas (GSK, Home). Los valores de la segunda variable
+(DayOfWeek) se convierten en las columnas (Friday, Monday, Thursday,
+Tuesday, Wednesday).</p>
+<p>También podemos guardar esta nueva tabla como objeto:</p>
+<pre class="r"><code>Tabla1 &lt;- table(Viajes$GoingTo, Viajes$DayOfWeek)</code></pre>
+</div>
+<div id="prop.table" class="section level4">
+<h4>2) prop.table()</h4>
+<p>La función <code>prop.table()</code> se diferencia en que, en lugar
+de mostrar cantidades, muestra las proporciones de cada variable en
+relación con la totalidad de los casos. Para utilizar la función, tan
+solo ponemos dentro del parénteses el objeto “Tabla1”, que contiene la
+tabla que hicimos con <code>table()</code>. Hacer esto nos mostrará las
+proporciones en general, es decir, las proporciones no estarán
+distribuidas por fila o columna. Para mostrar las proporciones según
+fila, se agrega un “, 1” después del objeto. Para mostrar las
+proporciones según columna, se agrega un “, 2”.</p>
+<pre class="r"><code>prop.table(Tabla1) # Proporciones generales</code></pre>
+<pre><code>##       
+##            Friday     Monday   Thursday    Tuesday  Wednesday
+##   GSK  0.06829268 0.09268293 0.11707317 0.11707317 0.11707317
+##   Home 0.06341463 0.09756098 0.09756098 0.11707317 0.11219512</code></pre>
+<pre class="r"><code>prop.table(Tabla1, 1) # Proporciones por fila</code></pre>
+<pre><code>##       
+##           Friday    Monday  Thursday   Tuesday Wednesday
+##   GSK  0.1333333 0.1809524 0.2285714 0.2285714 0.2285714
+##   Home 0.1300000 0.2000000 0.2000000 0.2400000 0.2300000</code></pre>
+<pre class="r"><code>prop.table(Tabla1, 2) # Proporciones por columna</code></pre>
+<pre><code>##       
+##           Friday    Monday  Thursday   Tuesday Wednesday
+##   GSK  0.5185185 0.4871795 0.5454545 0.5000000 0.5106383
+##   Home 0.4814815 0.5128205 0.4545455 0.5000000 0.4893617</code></pre>
+<p>Las tablas resultantes nos muestran las proporciones en general, por
+fila y por columna respectivamente. No obstante, automáticamente
+aparecen varios decimales. Esto se puede arreglar utilizando la función
+<code>round()</code>, que permite seleccionar el número de decimales que
+queremos mostrar.</p>
+<pre class="r"><code>round(prop.table(Tabla1), 2) # Proporciones generales</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK    0.07   0.09     0.12    0.12      0.12
+##   Home   0.06   0.10     0.10    0.12      0.11</code></pre>
+<pre class="r"><code>round(prop.table(Tabla1, 1), 2) # Proporciones por fila</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK    0.13   0.18     0.23    0.23      0.23
+##   Home   0.13   0.20     0.20    0.24      0.23</code></pre>
+<pre class="r"><code>round(prop.table(Tabla1, 2), 2) # Proporciones por columna</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK    0.52   0.49     0.55    0.50      0.51
+##   Home   0.48   0.51     0.45    0.50      0.49</code></pre>
+<pre class="r"><code># En este caso, terminamos todas las funciones con &quot;, 2&quot; para tener dos decimales, pero esto puede ser cambiado a gusto</code></pre>
+<p>Ahora que ya hemos redondeado las proporciones a 2 decimales, podemos
+convertirlas a porcentajes al simplemente multiplicar por 100.</p>
+<pre class="r"><code>100 * round(prop.table(Tabla1), 2) # Proporciones generales</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK       7      9       12      12        12
+##   Home      6     10       10      12        11</code></pre>
+<pre class="r"><code>100 * round(prop.table(Tabla1, 1), 2) # Proporciones por fila</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK      13     18       23      23        23
+##   Home     13     20       20      24        23</code></pre>
+<pre class="r"><code>100 * round(prop.table(Tabla1, 2), 2) # Proporciones por columna</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK      52     49       55      50        51
+##   Home     48     51       45      50        49</code></pre>
+<p>A partir de estas tablas de proporciones podemos obtener mucha
+información. Por ejemplo, 10% de los conductores manejó hacia su casa un
+lunes. Al mismo tiempo, de los conductores que manejaron a su casa, un
+20% lo hizo un lunes. Por otro lado, de los conductores que manejaron un
+lunes, el 51% lo hizo hacia su casa.</p>
+<p>Finalmente, también podemos guardar estas nuevas tablas como
+objeto:</p>
+<pre class="r"><code>TablaProp &lt;- 100 * round(prop.table(Tabla1), 2) # Proporciones generales
+TablaPropFila &lt;- 100 * round(prop.table(Tabla1, 1), 2) # Proporciones por fila
+TablaPropColumna &lt;- 100 * round(prop.table(Tabla1, 2), 2) # Proporciones por columna</code></pre>
+<p>De este modo, en lugar de escribir todo el código de nuevo,
+simplemente escribimos el nombre del objeto para visualizar las tablas
+nuevamente:</p>
+<pre class="r"><code>TablaProp</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK       7      9       12      12        12
+##   Home      6     10       10      12        11</code></pre>
+<pre class="r"><code>TablaPropFila</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK      13     18       23      23        23
+##   Home     13     20       20      24        23</code></pre>
+<pre class="r"><code>TablaPropColumna</code></pre>
+<pre><code>##       
+##        Friday Monday Thursday Tuesday Wednesday
+##   GSK      52     49       55      50        51
+##   Home     48     51       45      50        49</code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRhYmxhcyBJIg0KYXV0aG9yOiAiU2ViYXN0acOhbiBEYW5pZWwgR8OzbWV6IEZhcmplIg0KZGF0ZTogIjIwMjMtMDMtMDUiDQpvdXRwdXQ6IA0KICAgaHRtbF9kb2N1bWVudDoNCiAgICB0b2M6IHRydWUNCiAgICB0b2NfZmxvYXQ6IHRydWUNCiAgICBjb2xsYXBzZWQ6IGZhbHNlDQogICAgbnVtYmVyX3NlY3Rpb25zOiBmYWxzZQ0KICAgIHRvY19kZXB0aDogMQ0KICAgIGNvZGVfZG93bmxvYWQ6IHRydWUNCiAgICB0aGVtZTogZmxhdGx5DQogICAgaGlnaGxpZ2h0OiB0ZXh0bWF0ZQ0KLS0tDQoNCsKhSG9sYSENCg0KVW5hIGRlIGxhcyBoZXJyYW1pZW50YXMgbcOhcyDDunRpbGVzIHBhcmEgbGEgdmlzdWFsaXphY2nDs24gZGUgZGF0YSBzb24gbGFzIHRhYmxlcy4gRW4gZXN0YSBwcmltZXJhIHBhcnRlIHNvYnJlIGVsIHRlbWEgZGUgdGFibGFzIGVuIFIsIGV4cGxvcmFyZW1vcyBsYXMgZnVuY2lvbmVzIGLDoXNpY2FzIGRlIGB0YWJsZSgpYCB5IGBwcm9wLnRhYmxlKClgLiBQcmltZXJvLCBkZWJlbW9zIGNhcmdhciBsYSBkYXRhLiBFc3RhIGJhc2UgZGUgZGF0b3MgbXVlc3RyYSBsb3MgdGllbXBvcyBkZSB2w61hamUgcXVlIHJlYWxpemEgdW4gY29uZHVjdG9yIGRlc2RlIHN1IGNhc2EgYSBzdSBsdWdhciBkZSB0cmFiYWpvLiBFbiB0b3RhbCwgaW5jbHV5ZSAxNCB2YXJpYWJsZXMuIA0KDQpgYGB7cn0NClZpYWplcyA8LSByZWFkLmNzdigiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0hCdXJrbGkvc3RhdGlzdGljcy1mb3Itc29jaWFsLXNjaWVuY2VzLmdpdGh1Yi5pby9tYWluL0Jhc2VzX2RlX2RhdG9zL3RyYXZlbF90aW1lcy5jc3YiKQ0KYGBgDQoNCg0KIyMjIyAxKSB0YWJsZSgpDQoNClVuYSB2ZXogZGVzY2FyZ2FkYSBsYSBiYXNlIGRlIGRhdG9zLCBzZSBwdWVkZSBhY2NlZGVyIGEgdG9kYSBsYSBkYXRhIHNlbGVjY2lvbmFuZG8gZWwgb2JqZXRvIHF1ZSBhY2FiYW1vcyBkZSBjcmVhciAoVmlhamVzKSBlbiBsYSBwYXJ0ZSBzdXBlcmlvciBkZXJlY2hhIGRlIFIuIE5vIG9ic3RhbnRlLCBsYSBmdW5jacOzbiBgdGFibGUoKWAgcGVybWl0ZSBleGFtaW5hciB2YXJpYWJsZXMgZXNwZWPDrWZpY2FzLg0KDQpMbyBwcmltZXJvIHF1ZSBzZSBkZWJlIGRlIGhhY2VyIGVzIGVzY3JpYmlyIGxhIGZ1bmNpw7NuIHkgYWJyaXIgZWwgcGFyw6ludGVzaXMuIEx1ZWdvLCBzZSBzZWxlY2Npb25hbiBkb3MgdmFyaWFibGVzIGRlIGxhIGJhc2UgZGUgZGF0b3MuIEVzdGFzIHZhcmlhYmxlcyBzZXLDoW4gbGFzIGZpbGFzIHkgY29sdW1uYXMgZGUgbGEgdGFibGEuIFBhcmEgc2VsZWNjaW9uYXIgbGEgdmFyaWFibGUgZGVudHJvIGRlIGB0YWJsZSgpYCwgc2Ugc2lndWUgZWwgc2lndWllbnRlIGZvcm1hdG86IERhdGEkVmFyaWFibGUuIA0KDQpgYGB7cn0NCiMgRW4gZXN0ZSBlamVtcGxvLCBsYSBEYXRhIGVzICJWaWFqZXMiIHkgbGFzIHZhcmlhYmxlcyBzb24gIkdvaW5nVG8iIHkgIkRheU9mV2VlayINCg0KdGFibGUoVmlhamVzJEdvaW5nVG8sIFZpYWplcyREYXlPZldlZWspDQpgYGANCg0KRW4gZXN0YSBudWV2YSB0YWJsYSwgbG9zIHZhbG9yZXMgZGUgbGEgcHJpbWVyYSB2YXJpYWJsZSAoR29pbmdUbykgc2UgY29udmllcnRlbiBlbiBsYXMgZmlsYXMgKEdTSywgSG9tZSkuIExvcyB2YWxvcmVzIGRlIGxhIHNlZ3VuZGEgdmFyaWFibGUgKERheU9mV2Vlaykgc2UgY29udmllcnRlbiBlbiBsYXMgY29sdW1uYXMgKEZyaWRheSwgTW9uZGF5LCBUaHVyc2RheSwgVHVlc2RheSwgV2VkbmVzZGF5KS4NCg0KVGFtYmnDqW4gcG9kZW1vcyBndWFyZGFyIGVzdGEgbnVldmEgdGFibGEgY29tbyBvYmpldG86DQoNCmBgYHtyfQ0KVGFibGExIDwtIHRhYmxlKFZpYWplcyRHb2luZ1RvLCBWaWFqZXMkRGF5T2ZXZWVrKQ0KYGBgDQoNCg0KIyMjIyAyKSBwcm9wLnRhYmxlKCkNCg0KTGEgZnVuY2nDs24gYHByb3AudGFibGUoKWAgc2UgZGlmZXJlbmNpYSBlbiBxdWUsIGVuIGx1Z2FyIGRlIG1vc3RyYXIgY2FudGlkYWRlcywgbXVlc3RyYSBsYXMgcHJvcG9yY2lvbmVzIGRlIGNhZGEgdmFyaWFibGUgZW4gcmVsYWNpw7NuIGNvbiBsYSB0b3RhbGlkYWQgZGUgbG9zIGNhc29zLiBQYXJhIHV0aWxpemFyIGxhIGZ1bmNpw7NuLCB0YW4gc29sbyBwb25lbW9zIGRlbnRybyBkZWwgcGFyw6ludGVzZXMgZWwgb2JqZXRvICJUYWJsYTEiLCBxdWUgY29udGllbmUgbGEgdGFibGEgcXVlIGhpY2ltb3MgY29uIGB0YWJsZSgpYC4gSGFjZXIgZXN0byBub3MgbW9zdHJhcsOhIGxhcyBwcm9wb3JjaW9uZXMgZW4gZ2VuZXJhbCwgZXMgZGVjaXIsIGxhcyBwcm9wb3JjaW9uZXMgbm8gZXN0YXLDoW4gZGlzdHJpYnVpZGFzIHBvciBmaWxhIG8gY29sdW1uYS4gUGFyYSBtb3N0cmFyIGxhcyBwcm9wb3JjaW9uZXMgc2Vnw7puIGZpbGEsIHNlIGFncmVnYSB1biAiLCAxIiBkZXNwdcOpcyBkZWwgb2JqZXRvLiBQYXJhIG1vc3RyYXIgbGFzIHByb3BvcmNpb25lcyBzZWfDum4gY29sdW1uYSwgc2UgYWdyZWdhIHVuICIsIDIiLg0KDQpgYGB7cn0NCnByb3AudGFibGUoVGFibGExKSAjIFByb3BvcmNpb25lcyBnZW5lcmFsZXMNCnByb3AudGFibGUoVGFibGExLCAxKSAjIFByb3BvcmNpb25lcyBwb3IgZmlsYQ0KcHJvcC50YWJsZShUYWJsYTEsIDIpICMgUHJvcG9yY2lvbmVzIHBvciBjb2x1bW5hDQpgYGANCg0KTGFzIHRhYmxhcyByZXN1bHRhbnRlcyBub3MgbXVlc3RyYW4gbGFzIHByb3BvcmNpb25lcyBlbiBnZW5lcmFsLCBwb3IgZmlsYSB5IHBvciBjb2x1bW5hIHJlc3BlY3RpdmFtZW50ZS4gTm8gb2JzdGFudGUsIGF1dG9tw6F0aWNhbWVudGUgYXBhcmVjZW4gdmFyaW9zIGRlY2ltYWxlcy4gRXN0byBzZSBwdWVkZSBhcnJlZ2xhciB1dGlsaXphbmRvIGxhIGZ1bmNpw7NuIGByb3VuZCgpYCwgcXVlIHBlcm1pdGUgc2VsZWNjaW9uYXIgZWwgbsO6bWVybyBkZSBkZWNpbWFsZXMgcXVlIHF1ZXJlbW9zIG1vc3RyYXIuDQoNCmBgYHtyfQ0Kcm91bmQocHJvcC50YWJsZShUYWJsYTEpLCAyKSAjIFByb3BvcmNpb25lcyBnZW5lcmFsZXMNCnJvdW5kKHByb3AudGFibGUoVGFibGExLCAxKSwgMikgIyBQcm9wb3JjaW9uZXMgcG9yIGZpbGENCnJvdW5kKHByb3AudGFibGUoVGFibGExLCAyKSwgMikgIyBQcm9wb3JjaW9uZXMgcG9yIGNvbHVtbmENCg0KIyBFbiBlc3RlIGNhc28sIHRlcm1pbmFtb3MgdG9kYXMgbGFzIGZ1bmNpb25lcyBjb24gIiwgMiIgcGFyYSB0ZW5lciBkb3MgZGVjaW1hbGVzLCBwZXJvIGVzdG8gcHVlZGUgc2VyIGNhbWJpYWRvIGEgZ3VzdG8NCmBgYA0KDQpBaG9yYSBxdWUgeWEgaGVtb3MgcmVkb25kZWFkbyBsYXMgcHJvcG9yY2lvbmVzIGEgMiBkZWNpbWFsZXMsIHBvZGVtb3MgY29udmVydGlybGFzIGEgcG9yY2VudGFqZXMgYWwgc2ltcGxlbWVudGUgbXVsdGlwbGljYXIgcG9yIDEwMC4NCg0KYGBge3J9DQoxMDAgKiByb3VuZChwcm9wLnRhYmxlKFRhYmxhMSksIDIpICMgUHJvcG9yY2lvbmVzIGdlbmVyYWxlcw0KMTAwICogcm91bmQocHJvcC50YWJsZShUYWJsYTEsIDEpLCAyKSAjIFByb3BvcmNpb25lcyBwb3IgZmlsYQ0KMTAwICogcm91bmQocHJvcC50YWJsZShUYWJsYTEsIDIpLCAyKSAjIFByb3BvcmNpb25lcyBwb3IgY29sdW1uYQ0KYGBgDQoNCkEgcGFydGlyIGRlIGVzdGFzIHRhYmxhcyBkZSBwcm9wb3JjaW9uZXMgcG9kZW1vcyBvYnRlbmVyIG11Y2hhIGluZm9ybWFjacOzbi4gUG9yIGVqZW1wbG8sIDEwJSBkZSBsb3MgY29uZHVjdG9yZXMgbWFuZWrDsyBoYWNpYSBzdSBjYXNhIHVuIGx1bmVzLiBBbCBtaXNtbyB0aWVtcG8sIGRlIGxvcyBjb25kdWN0b3JlcyBxdWUgbWFuZWphcm9uIGEgc3UgY2FzYSwgdW4gMjAlIGxvIGhpem8gdW4gbHVuZXMuIFBvciBvdHJvIGxhZG8sIGRlIGxvcyBjb25kdWN0b3JlcyBxdWUgbWFuZWphcm9uIHVuIGx1bmVzLCBlbCA1MSUgbG8gaGl6byBoYWNpYSBzdSBjYXNhLg0KDQpGaW5hbG1lbnRlLCB0YW1iacOpbiBwb2RlbW9zIGd1YXJkYXIgZXN0YXMgbnVldmFzIHRhYmxhcyBjb21vIG9iamV0bzoNCg0KYGBge3J9DQpUYWJsYVByb3AgPC0gMTAwICogcm91bmQocHJvcC50YWJsZShUYWJsYTEpLCAyKSAjIFByb3BvcmNpb25lcyBnZW5lcmFsZXMNClRhYmxhUHJvcEZpbGEgPC0gMTAwICogcm91bmQocHJvcC50YWJsZShUYWJsYTEsIDEpLCAyKSAjIFByb3BvcmNpb25lcyBwb3IgZmlsYQ0KVGFibGFQcm9wQ29sdW1uYSA8LSAxMDAgKiByb3VuZChwcm9wLnRhYmxlKFRhYmxhMSwgMiksIDIpICMgUHJvcG9yY2lvbmVzIHBvciBjb2x1bW5hDQpgYGANCg0KRGUgZXN0ZSBtb2RvLCBlbiBsdWdhciBkZSBlc2NyaWJpciB0b2RvIGVsIGPDs2RpZ28gZGUgbnVldm8sIHNpbXBsZW1lbnRlIGVzY3JpYmltb3MgZWwgbm9tYnJlIGRlbCBvYmpldG8gcGFyYSB2aXN1YWxpemFyIGxhcyB0YWJsYXMgbnVldmFtZW50ZToNCg0KYGBge3J9DQpUYWJsYVByb3ANCg0KVGFibGFQcm9wRmlsYQ0KDQpUYWJsYVByb3BDb2x1bW5hDQpgYGANCg0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Tablas I_F.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

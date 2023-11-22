@@ -2,7 +2,16 @@
 title: "Operaciones Básicas de R"
 author: "Sebastián Daniel Gómez Farje"
 date: "2023-02-16"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    code_download: true
+    theme: flatly
+    highlight: textmate
 ---
 
 ¡Hola!

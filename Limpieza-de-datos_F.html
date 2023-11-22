@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Alexandra Brun Coronado" />
+
+
+<title>Limpieza de datos</title>
+
+<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Prueba1</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="El-lenguaje-de-R_F.html">Lenguaje de R</a>
+</li>
+<li>
+  <a href="Limpieza-de-datos_F.html">Limpieza de datos</a>
+</li>
+<li>
+  <a href="Operaciones-Básicas-de-R_F.html">Operaciones básicas de R</a>
+</li>
+<li>
+  <a href="Tipo-y-estructuras-de-datos_F.html">Tipos y estructuras de datos</a>
+</li>
+<li>
+  <a href="Tablas-I_F.html">Tablas I</a>
+</li>
+<li>
+  <a href="Tablas-III_F.html">Tablas III</a>
+</li>
+<li>
+  <a href="Cargar-y-guardar-datos-en-R_F.html">Cargar y guardar datos en R</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Limpieza de datos</h1>
+<h4 class="author">Alexandra Brun Coronado</h4>
+<h4 class="date">22 Noviembre 2023</h4>
+
+</div>
+
+
+<p>¡Hola!</p>
+<p>En la siguiente sección se explicarán algunas funciones para limpiar
+datos y estructurar información en R.</p>
+<div id="explorar-los-datos" class="section level3">
+<h3>1) Explorar los datos</h3>
+<p>Para esta sección se utilizará la base de datos de Daphna Canetti,
+Ibrahim Khatib, Aviad Rubin y Carly Wayne que utilizaron en su trabajo
+sobre el impacto del framing de los conflictos en las actitudes
+políticas.</p>
+<pre class="r"><code>library(readxl)
+data &lt;- read_excel(&quot;The impact of conflict frames on political attitudes.xlsx&quot;)
+View(data)</code></pre>
+<p>Puedes encontrar el dataset en el repositorio de GitHub <a
+href="https://github.com/HBurkli/statistics-for-social-sciences.github.io/tree/main/Bases_de_datos">aqui</a>.</p>
+<p>Lo primero que deberás realizar luego de cargar una base de datos es
+explorarla, para esto hay diferentes funciones:</p>
+<div id="a.-dim" class="section level4">
+<h4>a. dim()</h4>
+<p>La función <code>dim()</code> nos permite ver la dimensión de la base
+de datos.</p>
+<pre class="r"><code>dim(data) #El primer número hacer referencia a las filas y el segundo número a las columnas.</code></pre>
+<pre><code>## [1] 410  55</code></pre>
+</div>
+<div id="b.-head" class="section level4">
+<h4>b. head()</h4>
+<p>La función <code>head()</code> te permitirá ver las primeras filas de
+la base de datos.</p>
+<pre class="r"><code>head(data)</code></pre>
+<pre><code>## # A tibble: 6 × 55
+##   group Number A1_Conflict_perception A2_Conflict_perception
+##   &lt;dbl&gt;  &lt;dbl&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;
+## 1     1      1                      3                      1
+## 2     1      2                      2                      2
+## 3     1      3                      3                      1
+## 4     1      4                      3                      1
+## 5     1      5                      3                      2
+## 6     1      6                      3                      2
+## # ℹ 51 more variables: A3_Conflict_perception &lt;dbl&gt;,
+## #   A4_Conflict_perception &lt;dbl&gt;, A5_Conflict_perception &lt;dbl&gt;,
+## #   A6_Conflict_perception &lt;dbl&gt;, A7_Conflict_perception &lt;dbl&gt;,
+## #   A8_Conflict_perception &lt;dbl&gt;, A9_Conflict_perception &lt;dbl&gt;,
+## #   A10_Conflict_perception &lt;dbl&gt;, A11_Conflict_perception &lt;dbl&gt;,
+## #   A12_Conflict_perception &lt;dbl&gt;, A13_Conflict_perception &lt;dbl&gt;,
+## #   A14_Conflict_perception &lt;dbl&gt;, A15_Conflict_perception &lt;dbl&gt;, …</code></pre>
+<pre class="r"><code># También podrás seleccionar la cantidad de filas que quieras ver. Por ejemplo, mostrar las primeras 10 filas. 
+head(data, n=10) </code></pre>
+<pre><code>## # A tibble: 10 × 55
+##    group Number A1_Conflict_perception A2_Conflict_perception
+##    &lt;dbl&gt;  &lt;dbl&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;
+##  1     1      1                      3                      1
+##  2     1      2                      2                      2
+##  3     1      3                      3                      1
+##  4     1      4                      3                      1
+##  5     1      5                      3                      2
+##  6     1      6                      3                      2
+##  7     1      7                      2                      2
+##  8     1      8                      3                      1
+##  9     1      9                      2                      3
+## 10     1     10                      2                      3
+## # ℹ 51 more variables: A3_Conflict_perception &lt;dbl&gt;,
+## #   A4_Conflict_perception &lt;dbl&gt;, A5_Conflict_perception &lt;dbl&gt;,
+## #   A6_Conflict_perception &lt;dbl&gt;, A7_Conflict_perception &lt;dbl&gt;,
+## #   A8_Conflict_perception &lt;dbl&gt;, A9_Conflict_perception &lt;dbl&gt;,
+## #   A10_Conflict_perception &lt;dbl&gt;, A11_Conflict_perception &lt;dbl&gt;,
+## #   A12_Conflict_perception &lt;dbl&gt;, A13_Conflict_perception &lt;dbl&gt;,
+## #   A14_Conflict_perception &lt;dbl&gt;, A15_Conflict_perception &lt;dbl&gt;, …</code></pre>
+</div>
+<div id="c.-summary" class="section level4">
+<h4>c. summary()</h4>
+<p>Al aplicar la función <code>summary ()</code> obtendrás un resumen
+general sobre las variables de tu dataset. Te mostrará: el valor mínimo,
+el valor máximo, la media, la mediana. primer y tercer cuartil.</p>
+<pre class="r"><code>summary(data)</code></pre>
+<pre><code>##      group           Number       A1_Conflict_perception A2_Conflict_perception
+##  Min.   :1.000   Min.   :  1.00   Min.   :0.000          Min.   :0.000         
+##  1st Qu.:1.000   1st Qu.: 35.00   1st Qu.:1.000          1st Qu.:1.000         
+##  Median :2.000   Median : 69.00   Median :2.000          Median :1.000         
+##  Mean   :1.941   Mean   : 69.31   Mean   :2.056          Mean   :1.444         
+##  3rd Qu.:3.000   3rd Qu.:103.00   3rd Qu.:3.000          3rd Qu.:2.000         
+##  Max.   :3.000   Max.   :149.00   Max.   :3.000          Max.   :3.000         
+##                                                                                
+##  A3_Conflict_perception A4_Conflict_perception A5_Conflict_perception
+##  Min.   :0.000          Min.   :0.000          Min.   :0.000         
+##  1st Qu.:1.000          1st Qu.:1.000          1st Qu.:1.000         
+##  Median :2.000          Median :2.000          Median :2.000         
+##  Mean   :2.007          Mean   :1.971          Mean   :2.115         
+##  3rd Qu.:3.000          3rd Qu.:3.000          3rd Qu.:3.000         
+##  Max.   :3.000          Max.   :3.000          Max.   :3.000         
+##                                                                      
+##  A6_Conflict_perception A7_Conflict_perception A8_Conflict_perception
+##  Min.   :0.000          Min.   :0.000          Min.   :0.000         
+##  1st Qu.:2.000          1st Qu.:1.000          1st Qu.:1.000         
+##  Median :2.000          Median :1.000          Median :2.000         
+##  Mean   :2.234          Mean   :1.515          Mean   :2.015         
+##  3rd Qu.:3.000          3rd Qu.:2.000          3rd Qu.:3.000         
+##  Max.   :4.000          Max.   :3.000          Max.   :3.000         
+##                                                                      
+##  A9_Conflict_perception A10_Conflict_perception A11_Conflict_perception
+##  Min.   :0.000          Min.   :0.000           Min.   :0.000          
+##  1st Qu.:1.000          1st Qu.:1.000           1st Qu.:1.000          
+##  Median :2.000          Median :1.000           Median :2.000          
+##  Mean   :1.759          Mean   :1.522           Mean   :1.912          
+##  3rd Qu.:3.000          3rd Qu.:2.000           3rd Qu.:3.000          
+##  Max.   :3.000          Max.   :3.000           Max.   :3.000          
+##                                                                        
+##  A12_Conflict_perception A13_Conflict_perception A14_Conflict_perception
+##  Min.   :0.000           Min.   :0.000           Min.   :0.000          
+##  1st Qu.:1.000           1st Qu.:1.000           1st Qu.:1.000          
+##  Median :2.000           Median :2.000           Median :2.000          
+##  Mean   :1.695           Mean   :1.861           Mean   :1.759          
+##  3rd Qu.:2.000           3rd Qu.:2.000           3rd Qu.:2.000          
+##  Max.   :3.000           Max.   :3.000           Max.   :3.000          
+##                                                                         
+##  A15_Conflict_perception    C1_peace        C2_peace        C3_peace    
+##  Min.   :0.000           Min.   :0.000   Min.   :0.000   Min.   :0.000  
+##  1st Qu.:1.000           1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :2.000           Median :3.000   Median :2.000   Median :3.000  
+##  Mean   :1.602           Mean   :3.122   Mean   :2.565   Mean   :2.724  
+##  3rd Qu.:2.000           3rd Qu.:5.000   3rd Qu.:4.000   3rd Qu.:4.000  
+##  Max.   :3.000           Max.   :6.000   Max.   :6.000   Max.   :6.000  
+##                          NA&#39;s   :1       NA&#39;s   :1       NA&#39;s   :1      
+##     C4_peace        C5_peace        C6_peace      C7_peace      D1_exposure   
+##  Min.   :0.000   Min.   :0.000   Min.   :0.0   Min.   :0.000   Min.   :0.000  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:2.0   1st Qu.:2.000   1st Qu.:1.000  
+##  Median :3.000   Median :3.000   Median :4.0   Median :3.500   Median :1.000  
+##  Mean   :2.985   Mean   :2.797   Mean   :3.5   Mean   :3.275   Mean   :1.956  
+##  3rd Qu.:4.000   3rd Qu.:4.000   3rd Qu.:5.0   3rd Qu.:5.000   3rd Qu.:3.000  
+##  Max.   :6.000   Max.   :6.000   Max.   :6.0   Max.   :6.000   Max.   :4.000  
+##  NA&#39;s   :2       NA&#39;s   :2       NA&#39;s   :2     NA&#39;s   :2       NA&#39;s   :2      
+##   D2_exposure     D3_exposure     D4_exposure     D5_exposure        Gender    
+##  Min.   :1.000   Min.   :0.000   Min.   :0.000   Min.   :1.000   Min.   :0.00  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.00  
+##  Median :3.000   Median :2.000   Median :2.000   Median :1.000   Median :2.00  
+##  Mean   :2.635   Mean   :2.108   Mean   :2.029   Mean   :1.667   Mean   :1.51  
+##  3rd Qu.:4.000   3rd Qu.:3.000   3rd Qu.:3.000   3rd Qu.:2.000   3rd Qu.:2.00  
+##  Max.   :5.000   Max.   :4.000   Max.   :4.000   Max.   :4.000   Max.   :2.00  
+##  NA&#39;s   :2       NA&#39;s   :2       NA&#39;s   :2       NA&#39;s   :2       NA&#39;s   :6     
+##      Female            Age           Marital          married      
+##  Min.   :0.0000   Min.   : 0.00   Min.   : 0.000   Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:21.00   1st Qu.: 1.000   1st Qu.:0.0000  
+##  Median :1.0000   Median :23.00   Median : 1.000   Median :0.0000  
+##  Mean   :0.5443   Mean   :25.93   Mean   : 1.316   Mean   :0.2618  
+##  3rd Qu.:1.0000   3rd Qu.:30.00   3rd Qu.: 2.000   3rd Qu.:1.0000  
+##  Max.   :1.0000   Max.   :60.00   Max.   :11.000   Max.   :1.0000  
+##  NA&#39;s   :15       NA&#39;s   :5       NA&#39;s   :5        NA&#39;s   :9       
+##     Children         Rel_deg         secular          Religion    
+##  Min.   :0.0000   Min.   :0.000   Min.   :0.0000   Min.   :0.000  
+##  1st Qu.:0.0000   1st Qu.:1.000   1st Qu.:0.0000   1st Qu.:1.000  
+##  Median :0.0000   Median :2.000   Median :0.0000   Median :1.000  
+##  Mean   :0.4703   Mean   :1.951   Mean   :0.3566   Mean   :2.087  
+##  3rd Qu.:0.0000   3rd Qu.:3.000   3rd Qu.:1.0000   3rd Qu.:4.000  
+##  Max.   :9.0000   Max.   :4.000   Max.   :1.0000   Max.   :5.000  
+##  NA&#39;s   :6        NA&#39;s   :5       NA&#39;s   :9        NA&#39;s   :6      
+##        Ed            ac_ed            Income        income_hi    
+##  Min.   :0.000   Min.   :0.0000   Min.   :0.000   Min.   :0.000  
+##  1st Qu.:4.000   1st Qu.:1.0000   1st Qu.:2.000   1st Qu.:0.000  
+##  Median :4.000   Median :1.0000   Median :3.000   Median :0.000  
+##  Mean   :4.277   Mean   :0.8622   Mean   :2.876   Mean   :0.401  
+##  3rd Qu.:5.000   3rd Qu.:1.0000   3rd Qu.:4.000   3rd Qu.:1.000  
+##  Max.   :5.000   Max.   :1.0000   Max.   :5.000   Max.   :1.000  
+##  NA&#39;s   :6       NA&#39;s   :11       NA&#39;s   :6       NA&#39;s   :16     
+##     KENESET          Party         pal_party         ideology    
+##  Min.   : 0.00   Min.   :0.000   Min.   : 0.000   Min.   :0.000  
+##  1st Qu.: 5.00   1st Qu.:3.000   1st Qu.: 1.000   1st Qu.:2.000  
+##  Median :10.00   Median :4.000   Median : 2.000   Median :3.000  
+##  Mean   :10.88   Mean   :5.293   Mean   : 2.535   Mean   :3.055  
+##  3rd Qu.:20.75   3rd Qu.:9.000   3rd Qu.: 3.000   3rd Qu.:4.000  
+##  Max.   :21.00   Max.   :9.000   Max.   :11.000   Max.   :5.000  
+##  NA&#39;s   :148     NA&#39;s   :287     NA&#39;s   :281      NA&#39;s   :264    
+##    right_wing       left_wing          center           Hamas       
+##  Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+##  Median :0.0000   Median :0.0000   Median :0.0000   Median :0.0000  
+##  Mean   :0.3217   Mean   :0.4266   Mean   :0.2517   Mean   :0.2992  
+##  3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.5000   3rd Qu.:1.0000  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+##  NA&#39;s   :267      NA&#39;s   :267      NA&#39;s   :267      NA&#39;s   :283     
+##   islamic_nth      partisanship    conflict_percept_rel conflict_percept_nat
+##  Min.   :0.0000   Min.   :0.0000   Min.   : 0.000       Min.   : 0.000      
+##  1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.: 1.000       1st Qu.: 2.000      
+##  Median :0.0000   Median :0.0000   Median : 4.000       Median : 4.000      
+##  Mean   :0.3051   Mean   :0.3093   Mean   : 4.759       Mean   : 4.234      
+##  3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.: 8.000       3rd Qu.: 6.000      
+##  Max.   :1.0000   Max.   :1.0000   Max.   :13.000       Max.   :12.000      
+##  NA&#39;s   :292      NA&#39;s   :22                                                
+##  conflict_percept_mat
+##  Min.   : 0.00       
+##  1st Qu.: 1.00       
+##  Median : 3.00       
+##  Mean   : 3.52       
+##  3rd Qu.: 6.00       
+##  Max.   :11.00       
+## </code></pre>
+</div>
+<div id="d.-str" class="section level4">
+<h4>d. str()</h4>
+<p>Con la función str() podrás visualizar la estructura interna de la
+base de datos. Te dará información sobre: el nombre de las columnas, el
+número de observaciones, el tipo de dato y las primeras observaciones
+por cada columna.</p>
+<pre class="r"><code>str(data)</code></pre>
+<pre><code>## tibble [410 × 55] (S3: tbl_df/tbl/data.frame)
+##  $ group                  : num [1:410] 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Number                 : num [1:410] 1 2 3 4 5 6 7 8 9 10 ...
+##  $ A1_Conflict_perception : num [1:410] 3 2 3 3 3 3 2 3 2 2 ...
+##  $ A2_Conflict_perception : num [1:410] 1 2 1 1 2 2 2 1 3 3 ...
+##  $ A3_Conflict_perception : num [1:410] 2 3 2 2 2 3 3 3 3 1 ...
+##  $ A4_Conflict_perception : num [1:410] 3 3 3 3 3 3 3 3 2 2 ...
+##  $ A5_Conflict_perception : num [1:410] 3 2 3 3 3 1 3 1 2 3 ...
+##  $ A6_Conflict_perception : num [1:410] 3 3 3 3 3 3 3 3 2 2 ...
+##  $ A7_Conflict_perception : num [1:410] 3 2 2 3 3 2 3 3 2 2 ...
+##  $ A8_Conflict_perception : num [1:410] 3 3 2 3 3 3 3 3 2 1 ...
+##  $ A9_Conflict_perception : num [1:410] 3 3 3 3 3 3 3 2 2 1 ...
+##  $ A10_Conflict_perception: num [1:410] 3 2 3 3 3 3 2 3 2 1 ...
+##  $ A11_Conflict_perception: num [1:410] 3 3 2 3 3 3 3 3 2 1 ...
+##  $ A12_Conflict_perception: num [1:410] 3 1 3 3 3 3 3 3 3 2 ...
+##  $ A13_Conflict_perception: num [1:410] 2 2 3 3 2 1 2 2 0 2 ...
+##  $ A14_Conflict_perception: num [1:410] 3 2 3 3 3 3 3 3 2 2 ...
+##  $ A15_Conflict_perception: num [1:410] 2 2 2 3 3 2 3 2 2 2 ...
+##  $ C1_peace               : num [1:410] 6 6 4 6 6 5 4 6 6 1 ...
+##  $ C2_peace               : num [1:410] 6 6 4 6 5 4 6 6 6 1 ...
+##  $ C3_peace               : num [1:410] 6 1 1 5 5 2 5 5 3 1 ...
+##  $ C4_peace               : num [1:410] 6 6 2 5 3 4 6 4 6 1 ...
+##  $ C5_peace               : num [1:410] 6 6 1 6 5 5 6 6 6 1 ...
+##  $ C6_peace               : num [1:410] 6 6 6 6 5 5 6 6 6 1 ...
+##  $ C7_peace               : num [1:410] 6 6 6 4 3 2 4 4 4 1 ...
+##  $ D1_exposure            : num [1:410] 2 1 3 1 1 2 1 1 4 4 ...
+##  $ D2_exposure            : num [1:410] 2 1 3 1 1 2 1 4 4 4 ...
+##  $ D3_exposure            : num [1:410] 1 4 4 1 1 1 1 1 4 4 ...
+##  $ D4_exposure            : num [1:410] 1 1 4 1 1 1 1 1 4 3 ...
+##  $ D5_exposure            : num [1:410] 1 1 2 1 1 1 1 4 3 4 ...
+##  $ Gender                 : num [1:410] 1 1 2 1 1 2 1 2 2 2 ...
+##  $ Female                 : num [1:410] 0 0 1 0 0 1 0 1 1 1 ...
+##  $ Age                    : num [1:410] 37 30 37 40 33 36 36 26 25 25 ...
+##  $ Marital                : num [1:410] 3 2 2 2 2 2 2 1 1 2 ...
+##  $ married                : num [1:410] 0 1 1 1 1 1 1 0 0 1 ...
+##  $ Children               : num [1:410] 1 1 0 2 1 1 2 0 0 1 ...
+##  $ Rel_deg                : num [1:410] 1 1 1 2 1 1 1 1 1 2 ...
+##  $ secular                : num [1:410] 1 1 1 0 1 1 1 1 1 0 ...
+##  $ Religion               : num [1:410] 4 4 4 4 4 5 4 4 4 4 ...
+##  $ Ed                     : num [1:410] 3 5 3 3 5 4 5 4 5 5 ...
+##  $ ac_ed                  : num [1:410] 0 1 0 0 1 1 1 1 1 1 ...
+##  $ Income                 : num [1:410] 3 4 4 4 5 2 1 1 3 3 ...
+##  $ income_hi              : num [1:410] 0 1 1 1 1 0 0 0 0 0 ...
+##  $ KENESET                : num [1:410] 2 1 3 5 18 1 1 1 1 2 ...
+##  $ Party                  : num [1:410] NA NA NA NA NA NA NA NA NA NA ...
+##  $ pal_party              : num [1:410] NA NA NA NA NA NA NA NA NA NA ...
+##  $ ideology               : num [1:410] 3 4 4 4 5 4 5 4 4 2 ...
+##  $ right_wing             : num [1:410] 0 0 0 0 0 0 0 0 0 1 ...
+##  $ left_wing              : num [1:410] 0 1 1 1 1 1 1 1 1 0 ...
+##  $ center                 : num [1:410] 1 0 0 0 0 0 0 0 0 0 ...
+##  $ Hamas                  : num [1:410] NA NA NA NA NA NA NA NA NA NA ...
+##  $ islamic_nth            : num [1:410] NA NA NA NA NA NA NA NA NA NA ...
+##  $ partisanship           : num [1:410] 0 0 0 0 0 0 0 0 0 1 ...
+##  $ conflict_percept_rel   : num [1:410] 1 1 1 1 0 2 0 2 0 3 ...
+##  $ conflict_percept_nat   : num [1:410] 3 8 4 1 3 3 4 2 9 8 ...
+##  $ conflict_percept_mat   : num [1:410] 9 4 8 11 10 8 9 9 3 2 ...</code></pre>
+</div>
+</div>
+<div id="valores-perdidos-na" class="section level3">
+<h3>2) Valores perdidos (NA)</h3>
+<p>Lo primero que debes hacer es comprobar si en tu base de datos hay
+valores perdidos. Al anidar la función <code>is.na()</code> con la
+función <code>sum()</code> podrás saber la cantidad de NA en tu dataset.
+Por ejemplo:</p>
+<pre class="r"><code>sum(is.na(data)) </code></pre>
+<pre><code>## [1] 2504</code></pre>
+<p>Luego, tienes las siguientes dos opciones:</p>
+<div id="a.-eliminar-todos-los-na-en-un-dataset" class="section level4">
+<h4>a. Eliminar todos los NA en un dataset</h4>
+<p>La función <code>na.omit()</code> te permitirá eliminar todas las
+filas con valores NA en cualquier columna de tu dataset.Para ello puedes
+ejecutar el siguiente comando:</p>
+<pre class="r"><code>data_omit &lt;- na.omit(data)</code></pre>
+</div>
+<div id="b.-eliminar-los-na-de-una-columna" class="section level4">
+<h4>b. Eliminar los NA de una columna</h4>
+<p>En la práctica, usualmente vas a necesitra eliminar los valores
+perdidos de algunas columnas y no de todo el dataset. La función
+<code>complete.cases()</code> te permitirá realizar esta tarea. Por
+ejemplo:</p>
+<pre class="r"><code>data_cases &lt;- data[complete.cases(data$Female), ] 
+# En este ejemplo se están eliminando los NA de la columna Female. </code></pre>
+</div>
+</div>
+<div id="coerción" class="section level3">
+<h3>3) Coerción</h3>
+<p>En R los datos pueden ser transformados (coercionados) de un tipo a
+otro. Las coerciones se realizan en un orden en particular, de los datos
+más restrictivos a los más flexibles y no pueden ocurrir en orden
+inverso.</p>
+<center>
+</div>
+<div id="logical-integer-numeric-character" class="section level3">
+<h3><strong>Logical ➝ Integer ➝ Numeric ➝ Character</strong></h3>
+</center>
+<p>Para realizar una coerción en específico podrás utilizar la familia
+de funciones as():</p>
+<ul>
+<li>as. integer() –&gt; Devuelve datos enteros</li>
+<li>as. numeric() –&gt; Devuleve datos numéricos</li>
+<li>as.character –&gt; Devuelve una cadena de texto</li>
+<li>as.factor() –&gt; Devuelve un factor</li>
+<li>as.logic() –&gt; Devuelve un dato de tipo lógico</li>
+<li>as.null() –&gt; Devuelve NULL</li>
+</ul>
+<p>(*) Ten en cuenta que los datos numéricos y cadena de texto pueden
+ser transformados a factor.</p>
+<pre class="r"><code>data_omit$Age &lt;- as.numeric(data_omit$Age)</code></pre>
+</div>
+<div id="seleccionar-variables-con-r-base" class="section level3">
+<h3>4) Seleccionar variables con R base</h3>
+<p>Antes de abordar datos, es fundamental difinir el tipo de análisis
+que se desea realizar. Para ello, la adecuada selección de variables
+facilitará la posterior manipulación de los datos.</p>
+<p>Para seleccionar las variables se utilizarán los corchetes “[ ]”.
+Como se quiere seleccionar variables, se debe especificar a R que se
+trabajará con columnas, para ello se debe incorporar una coma luego del
+primer corchete. Por ejemplo:</p>
+<pre class="r"><code>data[, 1] #En este caso, se está seleccionando la primera columna (variable) de la base de datos data_omit.</code></pre>
+<pre><code>## # A tibble: 410 × 1
+##    group
+##    &lt;dbl&gt;
+##  1     1
+##  2     1
+##  3     1
+##  4     1
+##  5     1
+##  6     1
+##  7     1
+##  8     1
+##  9     1
+## 10     1
+## # ℹ 400 more rows</code></pre>
+<pre class="r"><code>data[, c(1,2,3)] #En este ejemplo, se están seleccionando las variables número uno, dos y tres</code></pre>
+<pre><code>## # A tibble: 410 × 3
+##    group Number A1_Conflict_perception
+##    &lt;dbl&gt;  &lt;dbl&gt;                  &lt;dbl&gt;
+##  1     1      1                      3
+##  2     1      2                      2
+##  3     1      3                      3
+##  4     1      4                      3
+##  5     1      5                      3
+##  6     1      6                      3
+##  7     1      7                      2
+##  8     1      8                      3
+##  9     1      9                      2
+## 10     1     10                      2
+## # ℹ 400 more rows</code></pre>
+<p>También es posible seleccionar un intervalo de columnas.</p>
+<pre class="r"><code>data[, 1:5] #Acá se está seleccionando de la primera a la quinta variable.</code></pre>
+<pre><code>## # A tibble: 410 × 5
+##    group Number A1_Conflict_perception A2_Conflict_perception
+##    &lt;dbl&gt;  &lt;dbl&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;
+##  1     1      1                      3                      1
+##  2     1      2                      2                      2
+##  3     1      3                      3                      1
+##  4     1      4                      3                      1
+##  5     1      5                      3                      2
+##  6     1      6                      3                      2
+##  7     1      7                      2                      2
+##  8     1      8                      3                      1
+##  9     1      9                      2                      3
+## 10     1     10                      2                      3
+## # ℹ 400 more rows
+## # ℹ 1 more variable: A3_Conflict_perception &lt;dbl&gt;</code></pre>
+</div>
+<div id="filtrar-observaciones-con-r-base" class="section level3">
+<h3>5) Filtrar observaciones con R base</h3>
+<p>Para este caso, como se quiere filtrar las observaciones, la coma se
+debe colocar antes del segundo corchete. Por ejemplo:</p>
+<pre class="r"><code>data[data$married == 1, ] #Se están filtrando las observaciones de las personas que sí están casadas.</code></pre>
+<pre><code>## # A tibble: 114 × 55
+##    group Number A1_Conflict_perception A2_Conflict_perception
+##    &lt;dbl&gt;  &lt;dbl&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;
+##  1     1      2                      2                      2
+##  2     1      3                      3                      1
+##  3     1      4                      3                      1
+##  4     1      5                      3                      2
+##  5     1      6                      3                      2
+##  6     1      7                      2                      2
+##  7     1     10                      2                      3
+##  8     1     12                      2                      1
+##  9     1     14                      2                      3
+## 10     1     17                      3                      3
+## # ℹ 104 more rows
+## # ℹ 51 more variables: A3_Conflict_perception &lt;dbl&gt;,
+## #   A4_Conflict_perception &lt;dbl&gt;, A5_Conflict_perception &lt;dbl&gt;,
+## #   A6_Conflict_perception &lt;dbl&gt;, A7_Conflict_perception &lt;dbl&gt;,
+## #   A8_Conflict_perception &lt;dbl&gt;, A9_Conflict_perception &lt;dbl&gt;,
+## #   A10_Conflict_perception &lt;dbl&gt;, A11_Conflict_perception &lt;dbl&gt;,
+## #   A12_Conflict_perception &lt;dbl&gt;, A13_Conflict_perception &lt;dbl&gt;, …</code></pre>
+<p>Es posible incorporar más de un filtro a la vez.</p>
+<pre class="r"><code>data[data$Gender == 1 &amp; data$Rel_deg == 4, ] #Para este ejemplo se están filtrando los casos de hombres con un indicador de religiosidad muy alto.</code></pre>
+<pre><code>## # A tibble: 18 × 55
+##    group Number A1_Conflict_perception A2_Conflict_perception
+##    &lt;dbl&gt;  &lt;dbl&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;
+##  1     1     25                      3                      2
+##  2     1     47                      2                      1
+##  3    NA     NA                     NA                     NA
+##  4     1    135                      2                      1
+##  5     2     27                      1                      1
+##  6     2     31                      1                      1
+##  7     2     50                      1                      1
+##  8    NA     NA                     NA                     NA
+##  9     2     69                      2                      2
+## 10    NA     NA                     NA                     NA
+## 11     2    111                      1                      1
+## 12    NA     NA                     NA                     NA
+## 13     2    138                      1                      1
+## 14     3      7                      1                      1
+## 15     3      8                      1                      1
+## 16     3     30                      1                      1
+## 17     3     35                      1                      1
+## 18    NA     NA                     NA                     NA
+## # ℹ 51 more variables: A3_Conflict_perception &lt;dbl&gt;,
+## #   A4_Conflict_perception &lt;dbl&gt;, A5_Conflict_perception &lt;dbl&gt;,
+## #   A6_Conflict_perception &lt;dbl&gt;, A7_Conflict_perception &lt;dbl&gt;,
+## #   A8_Conflict_perception &lt;dbl&gt;, A9_Conflict_perception &lt;dbl&gt;,
+## #   A10_Conflict_perception &lt;dbl&gt;, A11_Conflict_perception &lt;dbl&gt;,
+## #   A12_Conflict_perception &lt;dbl&gt;, A13_Conflict_perception &lt;dbl&gt;,
+## #   A14_Conflict_perception &lt;dbl&gt;, A15_Conflict_perception &lt;dbl&gt;, …</code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkxpbXBpZXphIGRlIGRhdG9zIg0KYXV0aG9yOiAiQWxleGFuZHJhIEJydW4gQ29yb25hZG8iDQpkYXRlOiAiYHIgZm9ybWF0KFN5cy50aW1lKCksICclZCAlQiAlWScpYCINCm91dHB1dDogDQogIGh0bWxfZG9jdW1lbnQ6DQogICAgdG9jOiB0cnVlDQogICAgdG9jX2Zsb2F0OiB0cnVlDQogICAgY29sbGFwc2VkOiBmYWxzZQ0KICAgIG51bWJlcl9zZWN0aW9uczogZmFsc2UNCiAgICB0b2NfZGVwdGg6IDENCiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlDQogICAgdGhlbWU6IGZsYXRseQ0KICAgIGhpZ2hsaWdodDogdGV4dG1hdGUNCi0tLQ0KwqFIb2xhIQ0KDQpFbiBsYSBzaWd1aWVudGUgc2VjY2nDs24gc2UgZXhwbGljYXLDoW4gYWxndW5hcyBmdW5jaW9uZXMgcGFyYSBsaW1waWFyIGRhdG9zIHkgZXN0cnVjdHVyYXIgaW5mb3JtYWNpw7NuIGVuIFIuIA0KDQojIyMgMSkgRXhwbG9yYXIgbG9zIGRhdG9zIA0KDQpQYXJhIGVzdGEgc2VjY2nDs24gc2UgdXRpbGl6YXLDoSBsYSBiYXNlIGRlIGRhdG9zIGRlIERhcGhuYSBDYW5ldHRpLCBJYnJhaGltIEtoYXRpYiwgQXZpYWQgUnViaW4geSBDYXJseSBXYXluZSBxdWUgdXRpbGl6YXJvbiBlbiBzdSB0cmFiYWpvIHNvYnJlIGVsIGltcGFjdG8gZGVsIGZyYW1pbmcgZGUgbG9zIGNvbmZsaWN0b3MgZW4gbGFzIGFjdGl0dWRlcyBwb2zDrXRpY2FzLg0KDQpgYGB7ciBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQ0KbGlicmFyeShyZWFkeGwpDQpkYXRhIDwtIHJlYWRfZXhjZWwoIlRoZSBpbXBhY3Qgb2YgY29uZmxpY3QgZnJhbWVzIG9uIHBvbGl0aWNhbCBhdHRpdHVkZXMueGxzeCIpDQpWaWV3KGRhdGEpDQpgYGANCg0KUHVlZGVzIGVuY29udHJhciBlbCBkYXRhc2V0IGVuIGVsIHJlcG9zaXRvcmlvIGRlIEdpdEh1YiBbYXF1aV0oaHR0cHM6Ly9naXRodWIuY29tL0hCdXJrbGkvc3RhdGlzdGljcy1mb3Itc29jaWFsLXNjaWVuY2VzLmdpdGh1Yi5pby90cmVlL21haW4vQmFzZXNfZGVfZGF0b3MpLg0KDQpMbyBwcmltZXJvIHF1ZSBkZWJlcsOhcyByZWFsaXphciBsdWVnbyBkZSBjYXJnYXIgdW5hIGJhc2UgZGUgZGF0b3MgZXMgZXhwbG9yYXJsYSwgcGFyYSBlc3RvIGhheSBkaWZlcmVudGVzIGZ1bmNpb25lczogDQoNCiMjIyMgYS4gZGltKCkgDQoNCkxhIGZ1bmNpw7NuIGBkaW0oKWAgbm9zIHBlcm1pdGUgdmVyIGxhIGRpbWVuc2nDs24gZGUgbGEgYmFzZSBkZSBkYXRvcy4NCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmRpbShkYXRhKSAjRWwgcHJpbWVyIG7Dum1lcm8gaGFjZXIgcmVmZXJlbmNpYSBhIGxhcyBmaWxhcyB5IGVsIHNlZ3VuZG8gbsO6bWVybyBhIGxhcyBjb2x1bW5hcy4NCmBgYA0KDQojIyMjIGIuIGhlYWQoKSANCg0KTGEgZnVuY2nDs24gYGhlYWQoKWAgdGUgcGVybWl0aXLDoSB2ZXIgbGFzIHByaW1lcmFzIGZpbGFzIGRlIGxhIGJhc2UgZGUgZGF0b3MuIA0KDQpgYGB7ciBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQ0KaGVhZChkYXRhKQ0KIyBUYW1iacOpbiBwb2Ryw6FzIHNlbGVjY2lvbmFyIGxhIGNhbnRpZGFkIGRlIGZpbGFzIHF1ZSBxdWllcmFzIHZlci4gUG9yIGVqZW1wbG8sIG1vc3RyYXIgbGFzIHByaW1lcmFzIDEwIGZpbGFzLiANCmhlYWQoZGF0YSwgbj0xMCkgDQpgYGANCg0KIyMjIyBjLiBzdW1tYXJ5KCkgDQoNCkFsIGFwbGljYXIgbGEgZnVuY2nDs24gYHN1bW1hcnkgKClgIG9idGVuZHLDoXMgdW4gcmVzdW1lbiBnZW5lcmFsIHNvYnJlIGxhcyB2YXJpYWJsZXMgZGUgdHUgZGF0YXNldC4gVGUgbW9zdHJhcsOhOiBlbCB2YWxvciBtw61uaW1vLCBlbCB2YWxvciBtw6F4aW1vLCBsYSBtZWRpYSwgbGEgbWVkaWFuYS4gcHJpbWVyIHkgdGVyY2VyIGN1YXJ0aWwuIA0KDQpgYGB7ciBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQ0Kc3VtbWFyeShkYXRhKQ0KYGBgDQoNCiMjIyMgZC4gc3RyKCkgDQoNCkNvbiBsYSBmdW5jacOzbiBzdHIoKSBwb2Ryw6FzIHZpc3VhbGl6YXIgbGEgZXN0cnVjdHVyYSBpbnRlcm5hIGRlIGxhIGJhc2UgZGUgZGF0b3MuIFRlIGRhcsOhIGluZm9ybWFjacOzbiBzb2JyZTogZWwgbm9tYnJlIGRlIGxhcyBjb2x1bW5hcywgZWwgbsO6bWVybyBkZSBvYnNlcnZhY2lvbmVzLCBlbCB0aXBvIGRlIGRhdG8geSBsYXMgcHJpbWVyYXMgb2JzZXJ2YWNpb25lcyBwb3IgY2FkYSBjb2x1bW5hLiAgDQoNCmBgYHtyIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9DQpzdHIoZGF0YSkNCmBgYA0KDQojIyMgMikgVmFsb3JlcyBwZXJkaWRvcyAoTkEpIA0KDQpMbyBwcmltZXJvIHF1ZSBkZWJlcyBoYWNlciBlcyBjb21wcm9iYXIgc2kgZW4gdHUgYmFzZSBkZSBkYXRvcyBoYXkgdmFsb3JlcyBwZXJkaWRvcy4gQWwgYW5pZGFyIGxhIGZ1bmNpw7NuIGBpcy5uYSgpYCBjb24gbGEgZnVuY2nDs24gYHN1bSgpYCBwb2Ryw6FzIHNhYmVyIGxhIGNhbnRpZGFkIGRlIE5BIGVuIHR1IGRhdGFzZXQuIFBvciBlamVtcGxvOiANCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCnN1bShpcy5uYShkYXRhKSkgDQpgYGANCg0KTHVlZ28sIHRpZW5lcyBsYXMgc2lndWllbnRlcyBkb3Mgb3BjaW9uZXM6IA0KDQojIyMjIGEuIEVsaW1pbmFyIHRvZG9zIGxvcyBOQSBlbiB1biBkYXRhc2V0IA0KDQpMYSBmdW5jacOzbiBgbmEub21pdCgpYCB0ZSBwZXJtaXRpcsOhIGVsaW1pbmFyIHRvZGFzIGxhcyBmaWxhcyBjb24gdmFsb3JlcyBOQSBlbiBjdWFscXVpZXIgY29sdW1uYSBkZSB0dSBkYXRhc2V0LlBhcmEgZWxsbyBwdWVkZXMgZWplY3V0YXIgZWwgc2lndWllbnRlIGNvbWFuZG86IA0KDQpgYGB7ciBtZXNzYWdlPUZBTFNFLCB3YXJuaW5nPUZBTFNFfQ0KZGF0YV9vbWl0IDwtIG5hLm9taXQoZGF0YSkNCmBgYA0KDQojIyMjIGIuIEVsaW1pbmFyIGxvcyBOQSBkZSB1bmEgY29sdW1uYSANCg0KRW4gbGEgcHLDoWN0aWNhLCB1c3VhbG1lbnRlIHZhcyBhIG5lY2VzaXRyYSBlbGltaW5hciBsb3MgdmFsb3JlcyBwZXJkaWRvcyBkZSBhbGd1bmFzIGNvbHVtbmFzIHkgbm8gZGUgdG9kbyBlbCBkYXRhc2V0LiBMYSBmdW5jacOzbiBgY29tcGxldGUuY2FzZXMoKWAgdGUgcGVybWl0aXLDoSByZWFsaXphciBlc3RhIHRhcmVhLiBQb3IgZWplbXBsbzogDQoNCmBgYHtyIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9DQpkYXRhX2Nhc2VzIDwtIGRhdGFbY29tcGxldGUuY2FzZXMoZGF0YSRGZW1hbGUpLCBdIA0KIyBFbiBlc3RlIGVqZW1wbG8gc2UgZXN0w6FuIGVsaW1pbmFuZG8gbG9zIE5BIGRlIGxhIGNvbHVtbmEgRmVtYWxlLiANCmBgYA0KDQojIyMgMykgQ29lcmNpw7NuIA0KDQpFbiBSIGxvcyBkYXRvcyBwdWVkZW4gc2VyIHRyYW5zZm9ybWFkb3MgKGNvZXJjaW9uYWRvcykgZGUgdW4gdGlwbyBhIG90cm8uIExhcyBjb2VyY2lvbmVzIHNlIHJlYWxpemFuIGVuIHVuIG9yZGVuIGVuIHBhcnRpY3VsYXIsIGRlIGxvcyBkYXRvcyBtw6FzIHJlc3RyaWN0aXZvcyBhIGxvcyBtw6FzIGZsZXhpYmxlcyB5IG5vIHB1ZWRlbiBvY3VycmlyIGVuIG9yZGVuIGludmVyc28uIA0KDQo8Y2VudGVyPg0KIyMjICoqTG9naWNhbCDinp0gSW50ZWdlciDinp0gIE51bWVyaWMg4p6dICBDaGFyYWN0ZXIqKg0KPC9jZW50ZXI+DQoNClBhcmEgcmVhbGl6YXIgdW5hIGNvZXJjacOzbiBlbiBlc3BlY8OtZmljbyBwb2Ryw6FzIHV0aWxpemFyIGxhIGZhbWlsaWEgZGUgZnVuY2lvbmVzIGFzKCk6IA0KDQotIGFzLiBpbnRlZ2VyKCkgLS0+IERldnVlbHZlIGRhdG9zIGVudGVyb3MgDQotIGFzLiBudW1lcmljKCkgLS0+IERldnVsZXZlIGRhdG9zIG51bcOpcmljb3MgDQotIGFzLmNoYXJhY3RlciAtLT4gRGV2dWVsdmUgdW5hIGNhZGVuYSBkZSB0ZXh0byANCi0gYXMuZmFjdG9yKCkgLS0+IERldnVlbHZlIHVuIGZhY3RvciANCi0gYXMubG9naWMoKSAtLT4gRGV2dWVsdmUgdW4gZGF0byBkZSB0aXBvIGzDs2dpY28gDQotIGFzLm51bGwoKSAtLT4gRGV2dWVsdmUgTlVMTCANCg0KKCopIFRlbiBlbiBjdWVudGEgcXVlIGxvcyBkYXRvcyBudW3DqXJpY29zIHkgY2FkZW5hIGRlIHRleHRvIHB1ZWRlbiBzZXIgdHJhbnNmb3JtYWRvcyBhIGZhY3Rvci4gDQoNCmBgYHtyfQ0KZGF0YV9vbWl0JEFnZSA8LSBhcy5udW1lcmljKGRhdGFfb21pdCRBZ2UpDQpgYGANCg0KIyMjIDQpIFNlbGVjY2lvbmFyIHZhcmlhYmxlcyBjb24gUiBiYXNlDQoNCkFudGVzIGRlIGFib3JkYXIgZGF0b3MsIGVzIGZ1bmRhbWVudGFsIGRpZmluaXIgZWwgdGlwbyBkZSBhbsOhbGlzaXMgcXVlIHNlIGRlc2VhIHJlYWxpemFyLiBQYXJhIGVsbG8sIGxhIGFkZWN1YWRhIHNlbGVjY2nDs24gZGUgdmFyaWFibGVzIGZhY2lsaXRhcsOhIGxhIHBvc3RlcmlvciBtYW5pcHVsYWNpw7NuIGRlIGxvcyBkYXRvcy4NCg0KUGFyYSBzZWxlY2Npb25hciBsYXMgdmFyaWFibGVzIHNlIHV0aWxpemFyw6FuIGxvcyBjb3JjaGV0ZXMgIlsgXSIuIENvbW8gc2UgcXVpZXJlIHNlbGVjY2lvbmFyIHZhcmlhYmxlcywgc2UgZGViZSBlc3BlY2lmaWNhciBhIFIgcXVlIHNlIHRyYWJhamFyw6EgY29uIGNvbHVtbmFzLCBwYXJhIGVsbG8gc2UgZGViZSBpbmNvcnBvcmFyIHVuYSBjb21hIGx1ZWdvIGRlbCBwcmltZXIgY29yY2hldGUuIFBvciBlamVtcGxvOg0KDQpgYGB7cn0NCmRhdGFbLCAxXSAjRW4gZXN0ZSBjYXNvLCBzZSBlc3TDoSBzZWxlY2Npb25hbmRvIGxhIHByaW1lcmEgY29sdW1uYSAodmFyaWFibGUpIGRlIGxhIGJhc2UgZGUgZGF0b3MgZGF0YV9vbWl0Lg0KDQpkYXRhWywgYygxLDIsMyldICNFbiBlc3RlIGVqZW1wbG8sIHNlIGVzdMOhbiBzZWxlY2Npb25hbmRvIGxhcyB2YXJpYWJsZXMgbsO6bWVybyB1bm8sIGRvcyB5IHRyZXMNCmBgYA0KDQpUYW1iacOpbiBlcyBwb3NpYmxlIHNlbGVjY2lvbmFyIHVuIGludGVydmFsbyBkZSBjb2x1bW5hcy4NCg0KYGBge3J9DQpkYXRhWywgMTo1XSAjQWPDoSBzZSBlc3TDoSBzZWxlY2Npb25hbmRvIGRlIGxhIHByaW1lcmEgYSBsYSBxdWludGEgdmFyaWFibGUuDQpgYGANCg0KIyMjIDUpIEZpbHRyYXIgb2JzZXJ2YWNpb25lcyBjb24gUiBiYXNlDQoNClBhcmEgZXN0ZSBjYXNvLCBjb21vIHNlIHF1aWVyZSBmaWx0cmFyIGxhcyBvYnNlcnZhY2lvbmVzLCBsYSBjb21hIHNlIGRlYmUgY29sb2NhciBhbnRlcyBkZWwgc2VndW5kbyBjb3JjaGV0ZS4gUG9yIGVqZW1wbG86DQoNCmBgYHtyfQ0KZGF0YVtkYXRhJG1hcnJpZWQgPT0gMSwgXSAjU2UgZXN0w6FuIGZpbHRyYW5kbyBsYXMgb2JzZXJ2YWNpb25lcyBkZSBsYXMgcGVyc29uYXMgcXVlIHPDrSBlc3TDoW4gY2FzYWRhcy4NCmBgYA0KDQpFcyBwb3NpYmxlIGluY29ycG9yYXIgbcOhcyBkZSB1biBmaWx0cm8gYSBsYSB2ZXouDQoNCmBgYHtyfQ0KZGF0YVtkYXRhJEdlbmRlciA9PSAxICYgZGF0YSRSZWxfZGVnID09IDQsIF0gI1BhcmEgZXN0ZSBlamVtcGxvIHNlIGVzdMOhbiBmaWx0cmFuZG8gbG9zIGNhc29zIGRlIGhvbWJyZXMgY29uIHVuIGluZGljYWRvciBkZSByZWxpZ2lvc2lkYWQgbXV5IGFsdG8uDQpgYGANCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg==</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Limpieza de datos_F.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

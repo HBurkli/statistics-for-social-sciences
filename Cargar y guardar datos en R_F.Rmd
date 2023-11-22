@@ -2,8 +2,21 @@
 title: "Guardar y cargar datos a R"
 author: "Alexandra Brun Coronado y Sebastián Daniel Gómez Farje"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    code_download: true
+    theme: flatly
+    highlight: textmate
 ---
+
+```{r echo=FALSE}
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+```
 
 ¡Hola!
 

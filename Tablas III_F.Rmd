@@ -2,13 +2,27 @@
 title: "Tablas III"
 author: "Sebastian Torres Tapia"
 date: "2023-02-24"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    code_download: true
+    theme: flatly
+    highlight: textmate
 ---
 !Hola! 
 
 En esta sesión veremos la parte final sobre el tema de tablas en R. Particularmente, veremos las comandos `Select()` y `Filter()`. Para ambos casos, podemos usar la librería **dplyr**. 
 
 ### 1) Cargamos las librerías y data
+
+```{r echo=FALSE}
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+```
+
 
 ```{r message=FALSE, warning=FALSE}
 # Cargamos librerías
